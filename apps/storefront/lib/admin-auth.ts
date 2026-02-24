@@ -5,16 +5,14 @@ export async function getAdminToken() {
         'http://127.0.0.1:9000';
 
     // 2. Get Credentials
-    const email = process.env.MEDUSA_ADMIN_EMAIL || 'admin@ola-shop.com';
-    const password = process.env.MEDUSA_ADMIN_PASSWORD || 'Abc996050@';
+    const envEmail = process.env.MEDUSA_ADMIN_EMAIL;
+    const envPass = process.env.MEDUSA_ADMIN_PASSWORD;
 
-    console.log(`[AdminAuth] Logging in: ${email} -> ${BACKEND_URL}`);
+    const email = envEmail || 'admin@ola-shop.com';
+    const password = envPass || 'Abc996050@';
 
-    if (!email || !password) {
-        console.error('[AdminAuth] Missing credentials');
-        return null;
-    }
-    console.log('[AdminAuth] Using Email: ' + email + ', Password Len: ' + password.length + ', Password Start: ' + password.substring(0, 2));
+    console.log(`[AdminAuth] Source: ${envPass ? 'ENV' : 'FALLBACK'}`);
+    console.log(`[AdminAuth] Using Email: ${email}, Password Len: ${password.length}, Password Start: ${password.substring(0, 2)}`);
 
     try {
         const res = await fetch(BACKEND_URL + '/auth/user/emailpass', {
