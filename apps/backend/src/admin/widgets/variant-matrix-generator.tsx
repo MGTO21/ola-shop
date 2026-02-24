@@ -25,7 +25,6 @@ const VariantMatrixGeneratorWidget = () => {
     const preview = generatePreview()
 
     return (
-    return (
         <Container className="p-6 border-rose-100 bg-rose-50/5 overflow-hidden">
             <div className="flex items-center justify-between mb-6">
                 <div>

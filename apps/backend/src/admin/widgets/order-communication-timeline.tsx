@@ -29,7 +29,6 @@ const OrderCommunicationTimelineWidget = () => {
     ]
 
     return (
-    return (
         <Container className="p-6 border-rose-100 bg-rose-50/5">
             <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center shadow-sm">
