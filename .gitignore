@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js
+.next/
+**/ .next/
+
+# Build outputs
+/dist/
+**/dist/
+build/
+**/build/
+
+# Environment files
+.env
+.env.*
+!.env.template
+
+# Logs
+*.log
+yarn-error.log
+
+# Temporary / OS files
+.DS_Store
+.cache/
+.idea/
+.vscode/
+temp/
+
+# Medusa specific
+.medusa/
+medusa-db.sql
+uploads/
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -1,0 +1,51 @@
+{
+    "tiktokProfile": {
+        "username": "ola.beauty.sd",
+        "profileUrl": "https://www.tiktok.com/@ola.beauty.sd",
+        "displayName": "Ola Beauty Sudan",
+        "displayNameAr": "علا بيوتي السودان"
+    },
+    "featuredVideos": [
+        {
+            "id": "1",
+            "title": "منتجات العناية بالبشرة",
+            "titleEn": "Skincare Products",
+            "videoUrl": "https://www.tiktok.com/@ola.beauty.sd/video/1",
+            "thumbnailUrl": "",
+            "enabled": true
+        },
+        {
+            "id": "2",
+            "title": "أحدث العطور",
+            "titleEn": "Latest Perfumes",
+            "videoUrl": "https://www.tiktok.com/@ola.beauty.sd/video/2",
+            "thumbnailUrl": "",
+            "enabled": true
+        },
+        {
+            "id": "3",
+            "title": "مستحضرات التجميل",
+            "titleEn": "Cosmetics",
+            "videoUrl": "https://www.tiktok.com/@ola.beauty.sd/video/3",
+            "thumbnailUrl": "",
+            "enabled": true
+        },
+        {
+            "id": "4",
+            "title": "منتجات سودانية",
+            "titleEn": "Sudanese Products",
+            "videoUrl": "https://www.tiktok.com/@ola.beauty.sd/video/4",
+            "thumbnailUrl": "",
+            "enabled": true
+        }
+    ],
+    "sectionSettings": {
+        "enabled": true,
+        "titleAr": "شاهد منتجاتنا على تيك توك",
+        "titleEn": "Trending on TikTok - See our latest products in action",
+        "ctaTextAr": "تابعنا على تيك توك",
+        "ctaTextEn": "Follow us on TikTok",
+        "showCreatorEmbed": true,
+        "showVideoGrid": true
+    }
+}

@@ -1,0 +1,57 @@
+const { loadEnv, defineConfig } = require('@medusajs/utils');
+
+loadEnv(process.env.NODE_ENV, process.cwd());
+
+module.exports = defineConfig({
+    projectConfig: {
+        databaseUrl: process.env.DATABASE_URL,
+        databaseDriverOptions: {
+            connectionTimeoutMillis: 10000, // 10s wait for connection
+            idleTimeoutMillis: 30000,
+            max: 10, // Limit connections to save VPS RAM
+        },
+        http: {
+            storeCors: process.env.STORE_CORS,
+            adminCors: process.env.ADMIN_CORS,
+            authCors: process.env.AUTH_CORS,
+            jwtSecret: process.env.JWT_SECRET || "supersecret",
+            cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+        }
+    },
+    modules: [
+        {
+            key: "cache",
+            resolve: "@medusajs/cache-redis",
+            options: {
+                redisUrl: process.env.REDIS_URL
+            },
+        },
+        {
+            key: "event_bus",
+            resolve: "@medusajs/event-bus-redis",
+            options: {
+                redisUrl: process.env.REDIS_URL
+            },
+        },
+        {
+            resolve: "@medusajs/auth",
+            options: {
+                providers: [
+                    {
+                        resolve: "@medusajs/auth-emailpass",
+                        id: "emailpass",
+                        options: {
+                            token_secret: process.env.JWT_SECRET || "supersecret",
+                        }
+                    }
+                ]
+            }
+        },
+    ],
+    // Force admin plugin to be enabled if it wasn't implicitly
+    admin: {
+        disable: false,
+        path: "/admin",
+    }
+})
+console.log(" DEBUG env DB:\, process.env.DATABASE_URL);

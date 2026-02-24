@@ -1,0 +1,105 @@
+{
+    "heroSections": [
+        {
+            "id": "hero1",
+            "category": "cosmetics",
+            "categoryName": "مستحضرات تجميل",
+            "categoryNameEn": "Cosmetics",
+            "posterImage": "/posters/hero1_cosmetics_poster_1765573123197.png",
+            "posterTitle": "أحدث مستحضرات التجميل",
+            "posterTitleEn": "Latest Cosmetics",
+            "posterSubtitle": "جمال طبيعي وأصيل",
+            "posterSubtitleEn": "Natural & Authentic Beauty",
+            "enabled": true,
+            "showFeaturedProducts": true,
+            "backgroundColor": "#FFF0F5",
+            "order": 1
+        },
+        {
+            "id": "hero2",
+            "category": "perfumes",
+            "categoryName": "عطور",
+            "categoryNameEn": "Perfumes",
+            "posterImage": "/posters/hero2_perfumes_poster_1765573157462.png",
+            "posterTitle": "عطور فاخرة",
+            "posterTitleEn": "Luxury Perfumes",
+            "posterSubtitle": "روائح تأسر القلوب",
+            "posterSubtitleEn": "Captivating Fragrances",
+            "enabled": true,
+            "showFeaturedProducts": true,
+            "backgroundColor": "#FFF5E6",
+            "order": 2
+        },
+        {
+            "id": "hero3",
+            "category": "fashion",
+            "categoryName": "أزياء",
+            "categoryNameEn": "Fashion",
+            "posterImage": "/posters/hero3_fashion_poster_1765573181864.png",
+            "posterTitle": "أزياء عصرية",
+            "posterTitleEn": "Modern Fashion",
+            "posterSubtitle": "أناقة لا تُضاهى",
+            "posterSubtitleEn": "Unmatched Elegance",
+            "enabled": true,
+            "showFeaturedProducts": true,
+            "backgroundColor": "#F0F8FF",
+            "order": 3
+        },
+        {
+            "id": "hero4",
+            "category": "accessories",
+            "categoryName": "إكسسوارات",
+            "categoryNameEn": "Accessories",
+            "posterImage": "/posters/hero4_accessories_poster_1765573198562.png",
+            "posterTitle": "إكسسوارات مميزة",
+            "posterTitleEn": "Unique Accessories",
+            "posterSubtitle": "لمسة نهائية مثالية",
+            "posterSubtitleEn": "Perfect Finishing Touch",
+            "enabled": true,
+            "showFeaturedProducts": true,
+            "backgroundColor": "#FFF0FA",
+            "order": 4
+        },
+        {
+            "id": "hero5",
+            "category": "sudanese",
+            "categoryName": "منتجات سودانية",
+            "categoryNameEn": "Sudanese Products",
+            "posterImage": "/posters/hero5_sudanese_poster_1765573217909.png",
+            "posterTitle": "منتجات سودانية أصيلة",
+            "posterTitleEn": "Authentic Sudanese Products",
+            "posterSubtitle": "تراث وجودة",
+            "posterSubtitleEn": "Heritage & Quality",
+            "enabled": true,
+            "showFeaturedProducts": true,
+            "backgroundColor": "#F5FFF0",
+            "order": 5
+        }
+    ],
+    "promotionalBanners": {
+        "topBanner": {
+            "id": "top-banner",
+            "image": "/posters/top_promotional_banner_1765573244453.png",
+            "title": "عروض خاصة",
+            "titleEn": "Special Offers",
+            "link": "/products?sale=true",
+            "enabled": true
+        },
+        "middleBanner": {
+            "id": "middle-banner",
+            "image": "/posters/middle_promotional_banner_1765573269552.png",
+            "title": "تخفيضات الموسم",
+            "titleEn": "Season Sale",
+            "link": "/products?featured=true",
+            "enabled": true
+        },
+        "bottomBanner": {
+            "id": "bottom-banner",
+            "image": "/posters/bottom_promotional_banner_1765573287451.png",
+            "title": "منتجات جديدة",
+            "titleEn": "New Arrivals",
+            "link": "/products?new=true",
+            "enabled": true
+        }
+    }
+}

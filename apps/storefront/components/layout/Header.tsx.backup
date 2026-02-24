@@ -1,0 +1,167 @@
+"use client"
+
+import Link from "next/link"
+import Image from "next/image"
+import { ShoppingCart, Heart, User, Search, Menu, Phone, ChevronDown } from "lucide-react"
+import { useState } from "react"
+import { LanguageSelector } from "./LanguageSelector"
+import { SearchBar } from "./SearchBar"
+import { MobileMenu } from "./MobileMenu"
+
+const categories = [
+    { name: "Cosmetics", nameAr: "مستحضرات تجميل", href: "/products?category=cosmetics" },
+    { name: "Perfumes", nameAr: "عطور", href: "/products?category=perfumes" },
+    { name: "Fashion", nameAr: "أزياء", href: "/products?category=fashion" },
+    { name: "Accessories", nameAr: "إكسسوارات", href: "/products?category=accessories" },
+    { name: "Sudanese Products", nameAr: "منتجات سودانية", href: "/products?category=sudanese" },
+]
+
+export function Header() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
+    const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false)
+
+    return (
+        <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur shadow-sm">
+            {/* Top Bar with Dark Pink Glass Effect */}
+            <div className="relative bg-gradient-to-r from-pink-900 to-rose-800 text-white py-1 text-xs md:text-sm">
+                <div className="absolute inset-0 bg-rose-500/70 backdrop-blur-md"></div>
+                <div className="container mx-auto px-4 flex justify-between items-center relative z-10">
+                    <div className="flex items-center gap-4 ml-auto">
+                        <a href="tel:+249121013939" className="flex items-center gap-1 hover:text-green-200" dir="ltr">
+                            <Phone className="w-3 h-3" /> +249 121 013 939
+                        </a>
+                        <LanguageSelector />
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Header with Rose Pink Glass */}
+            <div className="relative">
+                <div className="absolute inset-0 bg-rose-300/30 backdrop-blur-sm"></div>
+                <div className="container mx-auto px-4 py-1 relative z-10">
+                    <div className="flex items-center justify-between gap-4">
+                        {/* Logo Area */}
+                        <Link href="/" className="flex-shrink-0">
+                            <div className="relative w-64 h-40 md:w-72 md:h-48">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Ola Shop Logo"
+                                    fill
+                                    className="object-contain"
+                                    priority
+                                />
+                            </div>
+                        </Link>
+
+                        {/* Search */}
+                        <div className="hidden md:block flex-1 max-w-xl mx-8">
+                            <SearchBar />
+                        </div>
+
+                        {/* Icons */}
+                        <div className="flex items-center gap-3 md:gap-5 text-gray-700">
+                            <a href="https://wa.me/249121013939" target="_blank" className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-200 hover:bg-green-100">
+                                <span>💬 Need Help?</span>
+                            </a>
+
+                            {/* Account Dropdown */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
+                                    onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                                    onMouseLeave={() => setIsAccountDropdownOpen(false)}
+                                    className="hover:text-[#1A4D2E] flex items-center gap-1"
+                                >
+                                    <User className="w-6 h-6" />
+                                    <ChevronDown className="w-4 h-4 hidden md:block" />
+                                </button>
+
+                                {isAccountDropdownOpen && (
+                                    <div
+                                        className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                        onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                                        onMouseLeave={() => setIsAccountDropdownOpen(false)}
+                                    >
+                                        <Link href="/whatsapp-signup" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            🔐 تسجيل دخول / إنشاء حساب
+                                        </Link>
+                                        <Link href="/account/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📦 طلباتي
+                                        </Link>
+                                        <Link href="/account/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            👤 حسابي
+                                        </Link>
+                                        <Link href="/account/addresses" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📍 عناويني
+                                        </Link>
+                                        <div className="border-t border-gray-200 my-1"></div>
+                                        <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                            🚪 تسجيل خروج
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            <Link href="/wishlist" className="hover:text-[#1A4D2E]"><Heart className="w-6 h-6" /></Link>
+                            <Link href="/cart" className="relative hover:text-[#1A4D2E]">
+                                <ShoppingCart className="w-6 h-6" />
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">0</span>
+                            </Link>
+                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-1">
+                                <Menu className="w-6 h-6" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Mobile Search Bar */}
+                    <div className="md:hidden mt-1.5 pb-1"><SearchBar /></div>
+                </div>
+            </div>
+
+            {/* Desktop Navigation Categories with Rose Pink Glass Effect */}
+            <nav className="hidden md:block border-t relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-300/70 to-pink-300/70 backdrop-blur-md"></div>
+                <div className="container mx-auto px-4 relative z-10">
+                    <ul className="flex items-center justify-center gap-8 py-1.5 text-sm font-semibold text-gray-600">
+                        <li><Link href="/" className="hover:text-[#1A4D2E]">Home</Link></li>
+
+                        {/* Categories Dropdown */}
+                        <li
+                            className="relative"
+                            onMouseEnter={() => setIsCategoryDropdownOpen(true)}
+                            onMouseLeave={() => setIsCategoryDropdownOpen(false)}
+                        >
+                            <button className="flex items-center gap-1 hover:text-[#1A4D2E]">
+                                الأقسام <ChevronDown className="w-4 h-4" />
+                            </button>
+
+                            {isCategoryDropdownOpen && (
+                                <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                                    {categories.map((category) => (
+                                        <Link
+                                            key={category.name}
+                                            href={category.href}
+                                            className="block px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 hover:text-[#1A4D2E] transition-all"
+                                        >
+                                            <div className="font-semibold font-arabic">{category.nameAr}</div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </li>
+
+                        <li><Link href="/products?category=cosmetics" className="hover:text-[#1A4D2E]">مستحضرات تجميل</Link></li>
+                        <li><Link href="/products?category=perfumes" className="hover:text-[#1A4D2E]">عطور</Link></li>
+                        <li><Link href="/products?category=fashion" className="hover:text-[#1A4D2E]">أزياء</Link></li>
+                        <li><Link href="/products?category=accessories" className="hover:text-[#1A4D2E]">إكسسوارات</Link></li>
+                        <li><Link href="/products?category=sudanese" className="text-[#1A4D2E]">منتجات سودانية</Link></li>
+                        <li><Link href="/about" className="hover:text-[#1A4D2E]">About</Link></li>
+                    </ul>
+                </div>
+            </nav>
+
+            {isMobileMenuOpen && <MobileMenu onClose={() => setIsMobileMenuOpen(false)} />}
+        </header>
+    )
+}
