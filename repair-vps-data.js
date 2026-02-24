@@ -9,18 +9,27 @@ async function repair() {
     const client = new Client({ connectionString: DB_URL });
     await client.connect();
 
-    console.log("🚀 Starting VPS Data Repair...");
+    console.log("🚀 Starting Robust VPS Data Repair...");
+    console.log("Checking scrypt-kdf exports:", Object.keys(scrypt));
 
     try {
-        // 1. Fix Admin User in 'auth_identity' (Medusa v2 structure)
+        // 1. Generate Hash using the correct function
+        console.log("🛠️  Generating Hash...");
+        let hashBase64;
+
+        // Try 'kdf' which is common in many scrypt-kdf versions
+        if (typeof scrypt.kdf === 'function') {
+            const kdfRes = await scrypt.kdf(Buffer.from(ADMIN_PASS), { logN: 15, r: 8, p: 1 });
+            hashBase64 = kdfRes.toString('base64');
+        } else if (typeof scrypt.hash === 'function') {
+            const kdfRes = await scrypt.hash(Buffer.from(ADMIN_PASS), { logN: 15, r: 8, p: 1 });
+            hashBase64 = kdfRes.toString('base64');
+        } else {
+            throw new Error("Could not find hash or kdf function in scrypt-kdf library");
+        }
+
+        // 2. Fix Admin User in 'auth_identity'
         console.log("🛠️  Repairing Admin Auth Identity...");
-
-        // Medusa v2 hash parameters
-        const passwordBuf = Buffer.from(ADMIN_PASS);
-        const kdfRes = await scrypt.hash(passwordBuf, { logN: 15, r: 8, p: 1 });
-        const hashBase64 = kdfRes.toString('base64');
-
-        // Check if identity exists
         const identityCheck = await client.query("SELECT id FROM auth_identity WHERE identifier = $1", [ADMIN_EMAIL]);
 
         if (identityCheck.rows.length === 0) {
@@ -37,7 +46,7 @@ async function repair() {
             );
         }
 
-        // 2. Fix Region (Crucial for Carts)
+        // 3. Ensure Region Exists (Critical for Cart)
         console.log("🛠️  Checking Regions...");
         const regionCheck = await client.query("SELECT id FROM region LIMIT 1");
 
@@ -53,10 +62,22 @@ async function repair() {
             console.log(`   ✅ Found ${regionCheck.rows.length} existing regions.`);
         }
 
+        // 4. Update Admin User table (if needed for some Medusa flows)
+        console.log("🛠️  Checking Admin User record...");
+        const userCheck = await client.query("SELECT id FROM \"user\" WHERE email = $1", [ADMIN_EMAIL]);
+        if (userCheck.rows.length === 0) {
+            console.log("   Creating admin user record...");
+            await client.query(
+                "INSERT INTO \"user\" (id, email, first_name, last_name) VALUES ($1, $2, $3, $4)",
+                ['user_admin_ola', ADMIN_EMAIL, 'Admin', 'Ola']
+            );
+        }
+
         console.log("\n✨ Repair Completed! Please restart the backend.");
 
     } catch (e) {
         console.error("❌ Repair Failed:", e.message);
+        console.log("Stack Trace:", e.stack);
     } finally {
         await client.end();
     }
