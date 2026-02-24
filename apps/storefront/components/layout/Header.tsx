@@ -243,7 +243,7 @@ export function Header() {
                         </div>
                         {remaining > 0 ? (
                             <p className="text-center text-[10px] md:text-xs text-gray-700 mt-1">
-                                {t.header.remaining_text.replace('{amount}', remaining.toLocaleString())}
+                                {t.header.remaining_for_free_shipping.replace('{amount}', remaining.toLocaleString())}
                             </p>
                         ) : (
                             <p className="text-center text-xs font-bold text-emerald-600 mt-1 animate-bounce">
