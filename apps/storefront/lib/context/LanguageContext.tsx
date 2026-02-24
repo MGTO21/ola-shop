@@ -28,7 +28,7 @@ interface Translations {
         wishlist_label: string
         menu_label: string
         free_shipping_text: string
-        remaining_text: string
+        remaining_for_free_shipping: string
         congrats_free_shipping: string
         ola_store: string
     }
@@ -297,7 +297,7 @@ const translations: Record<Language, Translations> = {
             wishlist_label: "المفضلة",
             menu_label: "القائمة",
             free_shipping_text: "شحن مجاني للطلبات فوق {threshold} جنيه",
-            remaining_text: "متبقي {amount} جنيه للحصول على الشحن المجاني",
+            remaining_for_free_shipping: "متبقي {amount} جنيه للحصول على الشحن المجاني",
             congrats_free_shipping: "🎉 مبروك! حصلت على شحن مجاني",
             ola_store: "متجر العُلا"
         },
@@ -614,7 +614,7 @@ const translations: Record<Language, Translations> = {
             wishlist_label: "Wishlist",
             menu_label: "Menu",
             free_shipping_text: "Free shipping for orders over {threshold} SDG",
-            remaining_text: "{amount} SDG remaining for free shipping",
+            remaining_for_free_shipping: "{amount} SDG remaining for free shipping",
             congrats_free_shipping: "🎉 Congrats! You got free shipping",
             ola_store: "Ola Store"
         },
