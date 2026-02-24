@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         } else {
             // Create new cart, possibly with items
             // Medusa v2 requires region_id
-            const defaultRegionId = 'reg_c28fa86514644f729b89ca85c6ed5387'
+            const defaultRegionId = 'reg_01KC1R1XZRG584Y15RKTAR51N5'
 
             if (body.variant_id) {
                 finalBody = {

@@ -45,14 +45,15 @@ async function runTests() {
 
     // 4. Cart Creation & Product Check
     try {
+        const PRODUCTION_REGION_ID = 'reg_01KC1R1XZRG584Y15RKTAR51N5';
         console.log("\n🧪 Testing Cart Creation...");
         const cartRes = await axios.post(`${BASE_URL}/api/cart-proxy`, {
-            region_id: "reg_test" // This might fail if ID is wrong, but we see the status
+            region_id: PRODUCTION_REGION_ID
         }, { validateStatus: false });
         console.log(`   Result: Status ${cartRes.status}`);
 
         console.log("\n🧪 Testing Product Fetching...");
-        const prodRes = await axios.get(`${BASE_URL}/api/products`, { validateStatus: false });
+        const prodRes = await axios.get(`${BASE_URL}/api/products?region_id=${PRODUCTION_REGION_ID}`, { validateStatus: false });
         console.log(`   Result: Found ${prodRes.data?.products?.length || 0} products.`);
     } catch (e) { console.error("   ❌ Cart/Product Tests Failed:", e.message); }
 
