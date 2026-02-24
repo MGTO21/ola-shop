@@ -3,7 +3,7 @@ module.exports = {
         name: "medusa-backend",
         script: "npm",
         args: "run start",
-        cwd: "/root/ola-shop-v2/backend/medusa-server",
+        cwd: "/root/ola-shop-v2/apps/backend",
         instances: "max",
         exec_mode: "cluster",
         autorestart: true,

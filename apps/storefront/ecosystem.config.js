@@ -3,7 +3,7 @@ module.exports = {
         name: "ola-storefront",
         script: "npm",
         args: "run start",
-        cwd: "/root/ola-shop-v2/storefront",
+        cwd: "/root/ola-shop-v2/apps/storefront",
         instances: "max",
         exec_mode: "cluster",
         autorestart: true,
@@ -11,7 +11,7 @@ module.exports = {
         max_memory_restart: "1G",
         env: {
             NODE_ENV: "production",
-            PORT: 3000
+            PORT: 3001
         }
     }]
 };
