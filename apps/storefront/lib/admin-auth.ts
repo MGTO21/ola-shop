@@ -8,8 +8,14 @@ export async function getAdminToken() {
     const envEmail = process.env.MEDUSA_ADMIN_EMAIL;
     const envPass = process.env.MEDUSA_ADMIN_PASSWORD;
 
-    const email = envEmail || 'admin@ola-shop.com';
-    const password = envPass || 'Abc996050@';
+    let email = envEmail || 'admin@ola-shop.com';
+    let password = envPass || 'Abc996050@';
+
+    // Anti-Default Shield: If it's supersecret, it's definitely wrong for production
+    if (password === 'supersecret') {
+        console.warn('[AdminAuth] WARNING: "supersecret" detected. Forcing fallback to correct production password.');
+        password = 'Abc996050@';
+    }
 
     console.log(`[AdminAuth] Source: ${envPass ? 'ENV' : 'FALLBACK'}`);
     console.log(`[AdminAuth] Using Email: ${email}, Password Len: ${password.length}, Password Start: ${password.substring(0, 2)}`);
