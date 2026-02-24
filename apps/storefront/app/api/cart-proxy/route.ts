@@ -95,6 +95,7 @@ export async function POST(request: NextRequest) {
         })
 
         const responseText = await response.text()
+        console.log(`[Cart Proxy] Response Status: ${response.status}`);
 
         if (!response.ok) {
             console.error(`[Cart Proxy] POST ${url} failed:`, { status: response.status, body: responseText })
@@ -109,6 +110,7 @@ export async function POST(request: NextRequest) {
         let data: any = {}
         try {
             data = JSON.parse(responseText)
+            console.log(`[Cart Proxy] Success: Cart ID ${data.cart?.id || 'N/A'}`);
         } catch {
             // empty or non-JSON response - that's ok for some endpoints
         }

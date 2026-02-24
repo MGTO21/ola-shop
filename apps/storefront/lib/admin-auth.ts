@@ -21,20 +21,23 @@ export async function getAdminToken() {
     console.log(`[AdminAuth] Using Email: ${email}, Password Len: ${password.length}, Password Start: ${password.substring(0, 2)}`);
 
     try {
-        const res = await fetch(BACKEND_URL + '/auth/user/emailpass', {
+        // Medusa v2 Admin Auth endpoint
+        const loginUrl = `${BACKEND_URL}/auth/user/emailpass`;
+
+        const res = await fetch(loginUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
             cache: 'no-store'
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
 
         if (res.ok && data.token) {
-            console.log('[AdminAuth] Login Successful. Token: ' + data.token.substring(0, 10) + '...');
+            console.log('[AdminAuth] Login Successful.');
             return data.token;
         } else {
-            console.error('[AdminAuth] Login Failed:', res.status, data);
+            console.error('[AdminAuth] Login Failed:', res.status, JSON.stringify(data));
             return null;
         }
     } catch (e: any) {

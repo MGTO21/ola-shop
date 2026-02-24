@@ -5,27 +5,35 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
     try {
-        const { customerId, phone } = await request.json();
-        console.log(`[Send-OTP] Request for: ${phone} (${customerId})`);
+        const body = await request.json();
+        const { customerId, phone } = body;
+        console.log(`[Send-OTP] Request for phone: ${phone}, ID: ${customerId}`);
 
-        if (!customerId) return NextResponse.json({ error: "Customer ID missing" }, { status: 400 });
+        if (!customerId) {
+            console.error("[Send-OTP] Customer ID missing in body");
+            return NextResponse.json({ error: "Customer ID missing" }, { status: 400 });
+        }
 
-        const BACKEND_URL = process.env.MEDUSA_BACKEND_URL || 'http://localhost:9000';
+        const BACKEND_URL = process.env.MEDUSA_BACKEND_URL || 'http://127.0.0.1:9000';
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         // 1. Get Admin Token
         const adminToken = await getAdminToken();
         if (!adminToken) {
-            console.error("[Send-OTP] Failed to get Admin Token");
+            console.error("[Send-OTP] Failed to get Admin Token. Check credentials.");
             return NextResponse.json({ error: "Authentication Failed: Could not login to Admin API" }, { status: 500 });
         }
 
-        const authHeader = `Bearer ${adminToken}`;
+        // 2. Update OTP in Metadata (Medusa v2 Admin API)
+        const metadataUpdateUrl = `${BACKEND_URL}/admin/customers/${customerId}`;
+        console.log(`[Send-OTP] Updating metadata at: ${metadataUpdateUrl}`);
 
-        // 2. Update OTP
-        const metaRes = await fetch(`${BACKEND_URL}/admin/customers/${customerId}`, {
+        const metaRes = await fetch(metadataUpdateUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`
+            },
             body: JSON.stringify({
                 metadata: {
                     otp_code: otp,
@@ -35,26 +43,12 @@ export async function POST(request: Request) {
         });
 
         if (!metaRes.ok) {
-            const errText = await metaRes.text();
-            console.error(`[Send-OTP] Metadata Update Failed: ${metaRes.status} ${errText}`);
-            return NextResponse.json({ error: `Failed to update OTP: ${metaRes.status} - ${errText}` }, { status: 500 });
+            const errBody = await metaRes.json().catch(() => ({ message: "Unknown error" }));
+            console.error(`[Send-OTP] Metadata Update Failed: ${metaRes.status}`, JSON.stringify(errBody));
+            return NextResponse.json({ error: `Failed to update OTP: ${errBody.message || metaRes.status}` }, { status: 500 });
         }
 
-        console.log(`[Send-OTP] OTP Updated: ${otp}`);
-
-        // 3. Add to Requesting Group
-        const REQUESTING_GROUP_ID = "cusgroup_requesting";
-        const groupRes = await fetch(`${BACKEND_URL}/admin/customer-groups/${REQUESTING_GROUP_ID}/customers/batch`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
-            body: JSON.stringify({ customer_ids: [{ id: customerId }] })
-        });
-
-        if (!groupRes.ok) {
-            console.error(`[Send-OTP] Group Update Failed: ${groupRes.status}`);
-        } else {
-            console.log(`[Send-OTP] Added to Requesting Group`);
-        }
+        console.log(`[Send-OTP] SUCCESS! OTP [${otp}] saved for customer ${customerId}`);
 
         return NextResponse.json({ success: true, message: "OTP Sent" });
 

@@ -13,27 +13,27 @@ export async function POST(req: NextRequest) {
 
         const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || '';
 
-        // Forward to backend signup API
-        const backendResponse = await fetch(`${BACKEND_URL}/store/auth/signup`, {
+        // Forward to backend signup API (Medusa v2 Customer Registration)
+        const backendResponse = await fetch(`${BACKEND_URL}/auth/customer/emailpass/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-publishable-api-key': PUBLISHABLE_KEY
             },
             body: JSON.stringify({
-                phone,
-                firstName,
-                lastName,
-                password
+                email: phone, // In Ola-Shop, phone is the identity/email
+                password,
+                first_name: firstName,
+                last_name: lastName
             })
         });
 
-        const data = await backendResponse.json();
+        const data = await backendResponse.json().catch(() => ({}));
 
         if (!backendResponse.ok) {
             console.error("[Storefront Signup] Backend error:", data);
             return NextResponse.json(
-                { error: data.error || "فشل إنشاء الحساب" },
+                { error: data.message || "فشل إنشاء الحساب" },
                 { status: backendResponse.status }
             );
         }

@@ -20,14 +20,17 @@ async function runTests() {
 
     // 2. Admin Auth Internal Check
     try {
-        console.log("\n🧪 Testing Medusa Backend Admin Auth...");
-        const res = await axios.post(`http://127.0.0.1:9000/auth/user/emailpass/login`, {
+        console.log("\n🧪 Testing Medusa Backend Admin Auth (v2)...");
+        const res = await axios.post(`http://127.0.0.1:9000/auth/user/emailpass`, {
             email: ADMIN_EMAIL,
             password: ADMIN_PASS
         }, { validateStatus: false });
         console.log(`   Result: Status ${res.status}`);
-        if (res.status === 200) console.log("   ✅ ADMIN AUTH SUCCESSFUL!");
-        else console.error("   ❌ ADMIN AUTH FAILED - Password might be wrong or hashing changed.");
+        if (res.status === 200) {
+            console.log("   ✅ ADMIN AUTH SUCCESSFUL!");
+            console.log("   Token starts with:", res.data.token?.substring(0, 10));
+        }
+        else console.error("   ❌ ADMIN AUTH FAILED - Check credentials or backend logs.");
     } catch (e) { console.error("   ❌ Backend Auth Failed:", e.message); }
 
     // 3. Send-OTP Route Check
