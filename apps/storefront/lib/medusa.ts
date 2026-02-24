@@ -33,7 +33,7 @@ export async function getProducts(params?: {
         // Medusa v2 list products schema doesn't always accept region_id as a top-level query param
         const queryParams: any = {
             fields: params?.fields || "*variants.calculated_price",
-            region_id: 'reg_c28fa86514644f729b89ca85c6ed5387',
+            region_id: 'reg_01KC1R1XZRG584Y15RKTAR51N5',
             ...params
         }
         if (queryParams.region_id) delete queryParams.region_id
@@ -49,7 +49,7 @@ export async function getProducts(params?: {
 
 // Helper function to get single product
 export async function getProduct(id: string, queryParams?: any) {
-    const region_id = 'reg_c28fa86514644f729b89ca85c6ed5387';
+    const region_id = 'reg_01KC1R1XZRG584Y15RKTAR51N5';
     // Explicit Medusa v2 field paths to ensure all price and category data is returned
     const fields = queryParams?.fields || "*,variants.*,variants.calculated_price.*,variants.prices.*,categories.*";
     const decodedId = decodeURIComponent(id);
@@ -133,7 +133,7 @@ export async function getRelatedProducts(productId: string, categoryIds?: string
         const params: any = {
             limit: 4,
             fields: "*variants.calculated_price",
-            region_id: 'reg_c28fa86514644f729b89ca85c6ed5387',
+            region_id: 'reg_01KC1R1XZRG584Y15RKTAR51N5',
         }
 
         if (categoryIds && categoryIds.length > 0) {

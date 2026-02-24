@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://127.0.0.1:9000"
         const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 
-        const REGION_ID = 'reg_c28fa86514644f729b89ca85c6ed5387'
+        const REGION_ID = 'reg_01KC1R1XZRG584Y15RKTAR51N5'
         const fields = '*variants.calculated_price'
 
         const res = await fetch(`${BACKEND_URL}/store/products?limit=${limit}&region_id=${REGION_ID}&fields=${fields}`, {
