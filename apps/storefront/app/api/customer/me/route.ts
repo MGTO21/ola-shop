@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://127.0.0.1:9000';
-const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY;
+// Use server-side URL for server-side fetches
+const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://127.0.0.1:9000';
+const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || '';
 
 export async function GET(request: NextRequest) {
     try {
@@ -36,10 +37,18 @@ export async function GET(request: NextRequest) {
         };
 
         // Set Authorization header - prefer explicit client header, fallback to cookie token
+        let finalAuth = '';
         if (clientAuthHeader) {
-            headers['Authorization'] = clientAuthHeader;
+            finalAuth = clientAuthHeader;
         } else if (authToken) {
-            headers['Authorization'] = `Bearer ${authToken}`;
+            finalAuth = `Bearer ${authToken}`;
+        }
+
+        if (finalAuth) {
+            headers['Authorization'] = finalAuth;
+            console.log('[Customer Me] Final Auth Header set. Starts with:', finalAuth.substring(0, 15) + '...');
+        } else {
+            console.warn('[Customer Me] No authentication found (No cookie, no header)');
         }
 
         // Always forward cookies (for session-based auth)
@@ -59,9 +68,15 @@ export async function GET(request: NextRequest) {
         const responseText = await response.text();
 
         if (!response.ok) {
-            console.error(`[Customer Me] Backend Error:`, responseText);
+            console.error(`[Customer Me] Backend Status: ${response.status}. Error:`, responseText);
+            // Pass the detailed error back to client for easier debugging
             return NextResponse.json(
-                { message: 'Unauthorized', detail: responseText },
+                {
+                    message: 'Unauthorized',
+                    status: response.status,
+                    detail: responseText,
+                    hint: response.status === 401 ? 'Check if JWT_SECRET matches or if user is linked to customer' : 'Backend error'
+                },
                 { status: response.status }
             );
         }
