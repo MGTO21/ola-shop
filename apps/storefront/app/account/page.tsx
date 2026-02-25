@@ -73,7 +73,12 @@ export default function AccountPage() {
                 setSuccess(t.account.verification_success)
                 setCustomer({ ...customer, metadata: { ...customer.metadata, whatsapp_verified: true } })
             } else {
-                setError(data.message || t.account.verification_error)
+                // Check if OTP expired or is just invalid
+                if (data.message === "Expired" || data.expired) {
+                    setError(t.errors.otp_expired)
+                } else {
+                    setError(t.errors.invalid_otp)
+                }
             }
         } catch (e) {
             setError(t.account.connection_error)
@@ -244,7 +249,12 @@ export default function AccountPage() {
                 setCustomer(data.customer || { ...customer, ...profileForm, metadata: { ...customer?.metadata || {}, ...profileForm } })
                 setIsEditing(false)
             } else {
-                setError(data.error || t.account.update_error)
+                // If it's a 400, show validation message
+                if (res.status === 400) {
+                    setError(language === 'ar' ? "يرجى التأكد من صحة البيانات المدخلة" : "Please check your input data")
+                } else {
+                    setError(data.error || t.account.update_error)
+                }
             }
         } catch (e) {
             setError(t.account.connection_error)

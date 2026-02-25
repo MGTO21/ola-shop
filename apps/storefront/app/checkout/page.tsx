@@ -156,7 +156,11 @@ export default function CheckoutPage() {
             if (!cartUpdateRes.ok) {
                 const errData = await cartUpdateRes.json().catch(() => ({}))
                 console.error("[Checkout] Cart update failed:", errData)
-                throw new Error(errData.message || t.messages.error)
+                // If it's a 400 with "shipping_address" issue, it's likely invalid city or required field
+                if (cartUpdateRes.status === 400) {
+                    throw new Error(t.checkout.required_fields_error)
+                }
+                throw new Error(errData.message || (language === 'ar' ? "فشل تحديث معلومات التوصيل" : "Failed to update delivery info"))
             }
 
             // Step 2: Add Shipping Method
@@ -175,7 +179,11 @@ export default function CheckoutPage() {
                 headers: getAuthHeaders({ "Idempotency-Key": `ship-${cartId}` }),
                 body: JSON.stringify({ option_id: optionId })
             })
-            if (!shipMethodRes.ok) throw new Error(t.messages.error)
+            if (!shipMethodRes.ok) {
+                const errData = await shipMethodRes.json().catch(() => ({}))
+                console.error("[Checkout] Shipping method failed:", errData)
+                throw new Error(t.errors.shipping_not_available)
+            }
 
             // Step 3: Get or Create Payment Collection
             console.log("[Checkout] Step 3: Getting payment collection...")

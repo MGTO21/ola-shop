@@ -95,8 +95,8 @@ export default function LoginPage() {
                 await new Promise(r => setTimeout(r, 300))
                 window.location.href = "/account"
             } else {
-                const errorMsg = data.error || data.message || "فشل تسجيل الدخول"
-                alert(errorMsg)
+                const errorKey = data.error === "Unauthorized" || data.status === 401 ? t.messages.auth_error : (data.message || t.messages.error)
+                setError(errorKey)
             }
         } catch (error) {
             console.error("[Login] Error:", error)

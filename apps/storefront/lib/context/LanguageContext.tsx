@@ -135,6 +135,18 @@ interface Translations {
         success: string
         error: string
         loading: string
+        connection_error: string
+        auth_error: string
+    }
+    errors: {
+        generic: string
+        shipping_not_available: string
+        payment_failed: string
+        invalid_otp: string
+        otp_expired: string
+        phone_required: string
+        invalid_email: string
+        out_of_stock: string
     }
     cart: {
         title: string
@@ -443,7 +455,19 @@ const translations: Record<Language, Translations> = {
         messages: {
             success: "نجاح",
             error: "خطأ",
-            loading: "جاري التحميل..."
+            loading: "جاري التحميل...",
+            connection_error: "خطأ في الاتصال بالسيرفر، يرجى المحاولة مرة أخرى",
+            auth_error: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى"
+        },
+        errors: {
+            generic: "عذراً، حدث خطأ غير متوقع. يرجى المحاولة لاحقاً",
+            shipping_not_available: "عذراً، التوصيل غير متوفر حالياً لهذه المنطقة. يرجى مراجعة العنوان",
+            payment_failed: "فشلت عملية الدفع، يرجى التأكد من البيانات أو اختيار طريقة أخرى",
+            invalid_otp: "رمز التحقق غير صحيح، يرجى التأكد من الرمز المرسل",
+            otp_expired: "انتهت صلاحية الرمز، يرجى طلب رمز جديد",
+            phone_required: "رقم الهاتف مطلوب لإتمام هذه العملية",
+            invalid_email: "البريد الإلكتروني غير صحيح",
+            out_of_stock: "عذراً، بعض المنتجات في سلتك لم تعد متوفرة بالكمية المطلوبة"
         },
         cart: {
             title: "سلة التسوق",
@@ -760,7 +784,19 @@ const translations: Record<Language, Translations> = {
         messages: {
             success: "Success",
             error: "Error",
-            loading: "Loading..."
+            loading: "Loading...",
+            connection_error: "Server connection error, please try again",
+            auth_error: "Session expired, please login again"
+        },
+        errors: {
+            generic: "Sorry, an unexpected error occurred. Please try again later",
+            shipping_not_available: "Sorry, shipping is currently not available for this area. Please check the address",
+            payment_failed: "Payment failed, please check your details or try another method",
+            invalid_otp: "Invalid verification code, please check the code sent to you",
+            otp_expired: "Code expired, please request a new code",
+            phone_required: "Phone number is required to complete this action",
+            invalid_email: "Invalid email address",
+            out_of_stock: "Sorry, some items in your cart are no longer available in the requested quantity"
         },
         cart: {
             title: "Shopping Cart",
