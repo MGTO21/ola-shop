@@ -168,7 +168,7 @@ export default function CheckoutPage() {
 
             const shippingOptionsData = await shippingOptionsRes.json()
             const shippingOptions = shippingOptionsData.shipping_options || []
-            const optionId = shippingOptions[0]?.id || "so_01KHTXJ1EB2KTA78986WCTES68";
+            const optionId = shippingOptions[0]?.id || "so_khartoum_delivery";
 
             const shipMethodRes = await fetch(`/api/store-proxy?resource=carts&id=${cartId}&action=shipping-methods`, {
                 method: "POST",
