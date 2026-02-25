@@ -6,13 +6,16 @@ import Image from "next/image"
 import { MessageCircle, Sparkles, Phone, Eye, EyeOff, Loader2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { PUBLISHABLE_API_KEY } from "@/lib/medusa"
+import { useLanguage } from "@/lib/context/LanguageContext"
 
 export default function LoginPage() {
+    const { t } = useLanguage()
     const [phone, setPhone] = useState("")
     const [countryCode, setCountryCode] = useState("+249")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
     const [activeBg, setActiveBg] = useState(0)
     const bgs = ["/auth/bg1.jpg", "/auth/bg2.jpg"]
 
