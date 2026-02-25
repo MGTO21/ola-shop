@@ -66,7 +66,7 @@ export default function AccountPage() {
             const res = await fetch("/api/verify-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ customerId: customer.id, phone: customer.phone, code: otpCode })
+                body: JSON.stringify({ customerId: customer.id, phone: customer.phone, otp: otpCode })
             })
             const data = await res.json()
             if (data.success) {
