@@ -38,18 +38,23 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        console.log("[Storefront Signup] Success! Customer ID:", data.customer?.id);
+        // Medusa v2 Registration often returns { actor_id: "cus_...", ... } or { customer: { id: "cus_..." }, ... }
+        // We log it to confirm the structure
+        console.log("[Storefront Signup] Backend Data:", JSON.stringify(data));
+
+        const customerId = data.customer?.id || data.actor_id;
+        console.log("[Storefront Signup] Success! Customer ID:", customerId);
 
         const response = NextResponse.json({
             success: true,
-            customer: data.customer,
+            customer: data.customer || { id: customerId },
             token: data.token,
             message: data.message
         });
 
         if (data.token) {
             response.cookies.set('medusa_auth_token', data.token, {
-                httpOnly: false, // Changed to false so client JS can read it for redirect logic
+                httpOnly: false,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
                 maxAge: 60 * 60 * 24 * 7, // 7 days
