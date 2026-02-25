@@ -9,6 +9,10 @@
   "author": "Medusa (https://medusajs.com)",
   "license": "MIT",
   "scripts": {
-    "dev": "npm run dev --workspace=ola-shop-backend"
+    "dev": "npm run dev --workspace=ola-shop-backend",
+    "build": "npm run build:backend && npm run build:storefront",
+    "build:backend": "npm run build --workspace=ola-shop-backend",
+    "build:storefront": "npm run build --workspace=ola-shop-storefront",
+    "deploy": "git pull origin main && npm run build && pm2 restart all"
   }
 }

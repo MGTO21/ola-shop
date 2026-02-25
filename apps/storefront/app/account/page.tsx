@@ -123,6 +123,10 @@ export default function AccountPage() {
                 const data = await response.json()
                 if (data.customer) {
                     setCustomer(data.customer)
+                    // If OTP was already sent (exists in metadata), show the input field
+                    if (data.customer.metadata?.otp_code) {
+                        setOtpSent(true)
+                    }
                 } else {
                     router.push("/login")
                 }
