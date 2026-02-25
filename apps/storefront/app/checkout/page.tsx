@@ -385,13 +385,16 @@ export default function CheckoutPage() {
                                     {(() => {
                                         const dynamicCities = cart?.region?.metadata?.shipping_cities as string[]
                                         if (Array.isArray(dynamicCities) && dynamicCities.length > 0) {
-                                            return dynamicCities.map((city) => (
-                                                <option key={city} value={city}>{city}</option>
-                                            ))
+                                            return (
+                                                <>
+                                                    <option value="" disabled>{language === 'ar' ? 'اختر المدينة' : 'Select City'}</option>
+                                                    {dynamicCities.map((city) => (
+                                                        <option key={city} value={city}>{city}</option>
+                                                    ))}
+                                                </>
+                                            )
                                         }
-                                        return t.checkout.cities.map((city) => (
-                                            <option key={city.id} value={city.id}>{city.name}</option>
-                                        ))
+                                        return <option value="" disabled>{language === 'ar' ? 'لا توجد مدن متاحة حالياً' : 'No cities available'}</option>
                                     })()}
                                 </select>
                             </div>
