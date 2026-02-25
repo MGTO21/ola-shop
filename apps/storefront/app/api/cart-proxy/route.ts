@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         if (!cartId) return NextResponse.json({ error: 'Cart ID is required' }, { status: 400 })
 
         // Medusa v2 uses fields instead of expand for selecting relations
-        const response = await fetch(`${MEDUSA_BACKEND_URL}/store/carts/${cartId}?fields=*items,*payment_collection,*payment_collection.payment_sessions`, {
+        const response = await fetch(`${MEDUSA_BACKEND_URL}/store/carts/${cartId}?fields=*items,*region,*region.countries,*payment_collection,*payment_collection.payment_sessions`, {
             headers: getHeaders(request),
         })
 

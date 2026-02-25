@@ -382,9 +382,17 @@ export default function CheckoutPage() {
                                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                                     className="w-full bg-gray-50 border-2 border-transparent focus:border-rose-500 focus:bg-white rounded-2xl p-4 font-bold outline-none transition-all appearance-none"
                                 >
-                                    {t.checkout.cities.map((city) => (
-                                        <option key={city.id} value={city.id}>{city.name}</option>
-                                    ))}
+                                    {(() => {
+                                        const dynamicCities = cart?.region?.metadata?.shipping_cities as string[]
+                                        if (Array.isArray(dynamicCities) && dynamicCities.length > 0) {
+                                            return dynamicCities.map((city) => (
+                                                <option key={city} value={city}>{city}</option>
+                                            ))
+                                        }
+                                        return t.checkout.cities.map((city) => (
+                                            <option key={city.id} value={city.id}>{city.name}</option>
+                                        ))
+                                    })()}
                                 </select>
                             </div>
                             <div className={language === 'ar' ? 'text-right' : 'text-left'}>
