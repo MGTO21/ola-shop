@@ -6,6 +6,7 @@ module.exports = defineConfig({
 
     projectConfig: {
         databaseUrl: process.env.DATABASE_URL,
+        redisUrl: process.env.REDIS_URL, // Explicitly add this to projectConfig
         databaseDriverOptions: {
             connectionTimeoutMillis: 10000,
             idleTimeoutMillis: 30000,
