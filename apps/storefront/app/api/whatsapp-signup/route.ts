@@ -13,19 +13,14 @@ export async function POST(req: NextRequest) {
 
         const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || '';
 
-        // Forward to backend signup API (Medusa v2 Customer Registration)
-        const backendResponse = await fetch(`${BACKEND_URL}/auth/customer/emailpass/register`, {
+        // Forward to backend signup API (Custom Store Auth)
+        const backendResponse = await fetch(`${BACKEND_URL}/store/auth/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-publishable-api-key': PUBLISHABLE_KEY
             },
-            body: JSON.stringify({
-                email: phone, // In Ola-Shop, phone is the identity/email
-                password,
-                first_name: firstName,
-                last_name: lastName
-            })
+            body: JSON.stringify({ phone, firstName, lastName, password })
         });
 
         const data = await backendResponse.json().catch(() => ({}));

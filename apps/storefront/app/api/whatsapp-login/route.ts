@@ -12,14 +12,14 @@ export async function POST(req: NextRequest) {
 
         const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || '';
 
-        // Forward to backend login API (Medusa v2 Customer Auth)
-        const backendResponse = await fetch(`${BACKEND_URL}/auth/customer/emailpass`, {
+        // Forward to backend login API (Custom Store Auth)
+        const backendResponse = await fetch(`${BACKEND_URL}/store/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-publishable-api-key': PUBLISHABLE_KEY
             },
-            body: JSON.stringify({ email: phone, password }) // Medusa expects 'email' key even for phone-based login
+            body: JSON.stringify({ phone, password })
         });
 
         const data = await backendResponse.json().catch(() => ({}));
