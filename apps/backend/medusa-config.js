@@ -57,6 +57,6 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
-        backendUrl: process.env.MEDUSA_BACKEND_URL || "https://ola-shop.com"
+        backendUrl: process.env.MEDUSA_BACKEND_URL || "https://www.ola-shop.com"
     }
 })
