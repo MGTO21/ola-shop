@@ -116,21 +116,33 @@ export function ProductDetails({ product, relatedProducts = [] }: ProductDetails
     // Check wishlist status on mount
     useEffect(() => {
         const savedUser = localStorage.getItem('ola_user')
-        if (savedUser) {
-            const user = JSON.parse(savedUser)
-            const wishlist = user.metadata?.wishlist || []
-            setIsWishlisted(wishlist.includes(product.id))
+        if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
+            try {
+                const user = JSON.parse(savedUser)
+                const wishlist = user.metadata?.wishlist || []
+                setIsWishlisted(wishlist.includes(product.id))
+            } catch (e) {
+                console.error("Error parsing user in ProductDetails:", e)
+            }
         }
     }, [product.id])
 
     const toggleWishlist = async () => {
         const savedUser = localStorage.getItem('ola_user')
-        if (!savedUser) {
+        if (!savedUser || savedUser === 'undefined' || savedUser === 'null') {
             alert(t.products.wishlist_login_required)
             return
         }
 
-        const user = JSON.parse(savedUser)
+        let user;
+        try {
+            user = JSON.parse(savedUser)
+        } catch (e) {
+            console.error("Failed to parse user for wishlist toggle:", e)
+            alert(t.products.wishlist_login_required)
+            return
+        }
+
         const currentWishlist = user.metadata?.wishlist || []
         let newWishlist = []
 

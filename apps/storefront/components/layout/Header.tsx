@@ -89,9 +89,14 @@ export function Header() {
 
     const updateWishlistCount = () => {
         const savedUser = localStorage.getItem('ola_user')
-        if (savedUser) {
-            const user = JSON.parse(savedUser)
-            setWishlistCount(user.metadata?.wishlist?.length || 0)
+        if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
+            try {
+                const user = JSON.parse(savedUser)
+                setWishlistCount(user.metadata?.wishlist?.length || 0)
+            } catch (e) {
+                console.error("Error parsing user for wishlist:", e)
+                setWishlistCount(0)
+            }
         } else {
             setWishlistCount(0)
         }

@@ -84,8 +84,12 @@ export default function LoginPage() {
                     document.cookie = `medusa_auth_token=${data.token}; path=/; SameSite=Lax`
                 }
 
-                // Save user info for fast UI display
-                localStorage.setItem("ola_user", JSON.stringify(data.customer))
+                // Save user info for fast UI display - Safety Guard: only save if it's an object
+                if (data.customer && typeof data.customer === 'object') {
+                    localStorage.setItem("ola_user", JSON.stringify(data.customer))
+                } else {
+                    localStorage.removeItem("ola_user")
+                }
 
                 // Give cookie a moment to settle
                 await new Promise(r => setTimeout(r, 300))

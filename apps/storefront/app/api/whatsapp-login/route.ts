@@ -42,8 +42,28 @@ export async function POST(req: NextRequest) {
         });
 
         if (data.token) {
+            // Medusa v2 detached auth often doesn't return the full customer object in the auth response
+            // We fetch it manually here to ensure the storefront has what it needs
+            try {
+                const meRes = await fetch(`${BACKEND_URL}/store/customers/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${data.token}`,
+                        'x-publishable-api-key': PUBLISHABLE_KEY
+                    }
+                });
+                if (meRes.ok) {
+                    const meData = await meRes.json();
+                    if (meData.customer) {
+                        data.customer = meData.customer;
+                        console.log("[Storefront Login] Hydrated customer data from /me");
+                    }
+                }
+            } catch (e) {
+                console.error("[Storefront Login] Failed to hydrate customer:", e);
+            }
+
             response.cookies.set('medusa_auth_token', data.token, {
-                httpOnly: false, // Changed to false so client JS can read it for redirect logic
+                httpOnly: false,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
                 path: '/',
