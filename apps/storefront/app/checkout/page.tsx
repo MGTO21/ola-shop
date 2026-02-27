@@ -14,6 +14,7 @@ export default function CheckoutPage() {
     const [placingOrder, setPlacingOrder] = useState(false)
     const [step, setStep] = useState(1) // 1: Info, 2: Success
     const [error, setError] = useState("")
+    const [regions, setRegions] = useState<any[]>([])
 
     const [formData, setFormData] = useState({
         first_name: "",
@@ -67,6 +68,48 @@ export default function CheckoutPage() {
     }
 
     useEffect(() => {
+        const fetchRegions = async () => {
+            try {
+                const res = await fetch("/api/store-proxy?resource=regions")
+                if (res.ok) {
+                    const data = await res.json()
+                    setRegions(data.regions || [])
+                }
+            } catch (e) {
+                console.error("Regions fetch failed", e)
+            }
+        }
+        fetchRegions()
+    }, [])
+
+    const handleCityChange = async (cityName: string) => {
+        const selectedRegion = regions.find(r => r.name === cityName)
+        if (!selectedRegion || !cart) return
+
+        setFormData(prev => ({ ...prev, city: cityName }))
+
+        // If the selected city belongs to a different region, update the cart's region
+        if (cart.region_id !== selectedRegion.id) {
+            setLoading(true)
+            try {
+                const res = await fetch(`/api/cart-proxy?id=${cart.id}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ region_id: selectedRegion.id })
+                })
+                if (res.ok) {
+                    const data = await res.json()
+                    setCart(data.cart)
+                }
+            } catch (e) {
+                console.error("Failed to update cart region", e)
+            } finally {
+                setLoading(false)
+            }
+        }
+    }
+
+    useEffect(() => {
         const fetchCart = async () => {
             const cartId = localStorage.getItem("cart_id")
             if (!cartId) {
@@ -80,6 +123,11 @@ export default function CheckoutPage() {
                 if (res.ok) {
                     const data = await res.json()
                     setCart(data)
+
+                    // Set default city if form data is empty
+                    if (!formData.city && data.region?.name) {
+                        setFormData(prev => ({ ...prev, city: data.region.name }))
+                    }
 
                     // Pre-fill from user if available
                     const savedUser = localStorage.getItem("ola_user")
@@ -379,23 +427,19 @@ export default function CheckoutPage() {
                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 whitespace-nowrap">{t.checkout.city}</label>
                                 <select
                                     value={formData.city}
-                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                    onChange={(e) => handleCityChange(e.target.value)}
                                     className="w-full bg-gray-50 border-2 border-transparent focus:border-rose-500 focus:bg-white rounded-2xl p-4 font-bold outline-none transition-all appearance-none"
                                 >
-                                    {(() => {
-                                        const dynamicCities = cart?.region?.metadata?.shipping_cities as string[]
-                                        if (Array.isArray(dynamicCities) && dynamicCities.length > 0) {
-                                            return (
-                                                <>
-                                                    <option value="" disabled>{language === 'ar' ? 'اختر المدينة' : 'Select City'}</option>
-                                                    {dynamicCities.map((city) => (
-                                                        <option key={city} value={city}>{city}</option>
-                                                    ))}
-                                                </>
-                                            )
-                                        }
-                                        return <option value="" disabled>{language === 'ar' ? 'لا توجد مدن متاحة حالياً' : 'No cities available'}</option>
-                                    })()}
+                                    {regions.length > 0 ? (
+                                        <>
+                                            <option value="" disabled>{language === 'ar' ? 'اختر المدينة' : 'Select City'}</option>
+                                            {regions.map((region) => (
+                                                <option key={region.id} value={region.name}>{region.name}</option>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <option value="" disabled>{language === 'ar' ? 'لا توجد مدن متاحة حالياً' : 'No cities available'}</option>
+                                    )}
                                 </select>
                             </div>
                             <div className={language === 'ar' ? 'text-right' : 'text-left'}>
