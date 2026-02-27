@@ -1,4 +1,5 @@
 const { loadEnv, defineConfig } = require('@medusajs/utils');
+const path = require('path');
 
 loadEnv(process.env.NODE_ENV, process.cwd());
 
@@ -59,7 +60,7 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
-        outDir: "dist/public/admin",
+        outDir: path.resolve(__dirname, "dist/public/admin"),
         backendUrl: "https://www.ola-shop.com"
     }
 })
