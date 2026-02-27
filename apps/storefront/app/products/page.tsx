@@ -24,7 +24,7 @@ function ProductsContent() {
                 setLoading(true)
                 const query: any = {
                     limit: 100,
-                    region_id: 'reg_c28fa86514644f729b89ca85c6ed5387',
+                    region_id: process.env.NEXT_PUBLIC_MEDUSA_REGION_ID || 'reg_01KC1R1XZRG584Y15RKTAR51N5',
                     fields: '*variants.calculated_price,*categories'
                 }
 

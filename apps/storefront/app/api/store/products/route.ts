@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
-        const REGION_ID = 'reg_c28fa86514644f729b89ca85c6ed5387';
+        const REGION_ID = process.env.NEXT_PUBLIC_MEDUSA_REGION_ID || 'reg_01KC1R1XZRG584Y15RKTAR51N5';
         const expansion = '*variants.calculated_price';
 
         // Append region_id and fields if not already present
