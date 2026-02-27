@@ -56,6 +56,18 @@ module.exports = defineConfig({
                 ]
             }
         },
+        {
+            resolve: "@medusajs/fulfillment",
+            options: {
+                providers: [
+                    {
+                        resolve: "@medusajs/fulfillment-manual",
+                        id: "manual",
+                        options: {}
+                    }
+                ]
+            }
+        },
     ],
     admin: {
         disable: false,
