@@ -60,7 +60,7 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
-        outDir: path.join(process.cwd(), "admin-build"),
+        outDir: path.join(__dirname, "dist/public/admin"),
         backendUrl: "https://www.ola-shop.com"
     }
 })
