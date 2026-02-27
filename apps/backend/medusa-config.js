@@ -58,6 +58,7 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
+        outDir: "dist/admin",
         backendUrl: "https://www.ola-shop.com"
     }
 })
