@@ -60,7 +60,7 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
-        outDir: path.join(__dirname, "dist/public/admin"),
+        outDir: ".medusa/admin",
         backendUrl: "https://www.ola-shop.com"
     }
 })
