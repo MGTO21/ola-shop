@@ -6,7 +6,8 @@ module.exports = defineConfig({
 
     projectConfig: {
         databaseUrl: process.env.DATABASE_URL,
-        redisUrl: process.env.REDIS_URL, // Explicitly add this to projectConfig
+        redisUrl: process.env.REDIS_URL,
+        workerMode: process.env.MEDUSA_WORKER_MODE || "shared",
         databaseDriverOptions: {
             connectionTimeoutMillis: 10000,
             idleTimeoutMillis: 30000,
@@ -58,7 +59,6 @@ module.exports = defineConfig({
     admin: {
         disable: false,
         path: "/app",
-        outDir: "dist/admin",
         backendUrl: "https://www.ola-shop.com"
     }
 })
