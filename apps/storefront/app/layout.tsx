@@ -36,6 +36,9 @@ export const metadata: Metadata = {
         "بخور سوداني", "خمرة سودانية", "ريحة سودانية", "بخور صندل", "مكياج أصلي", "سودان", "كريمات تجميل",
         "توصيل عبايات الخرطوم", "دفع عند الاستلام السودان", "منتجات تجميل أصلية"
     ],
+    verification: {
+        google: "t1hM-aW8xgCW1v9OLqsQ22m7Q1LfJdAbCHH_A0Kf65g",
+    },
 }
 
 export default function RootLayout({
