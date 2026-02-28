@@ -44,13 +44,16 @@ export function ProductDetails({ product, relatedProducts = [] }: ProductDetails
     if (product?.variants?.length > 0) {
         for (const v of product.variants) {
             const calcPrice = v.calculated_price;
-            if (calcPrice?.calculated_amount && Number(calcPrice.calculated_amount) > 0) {
+            const hasCalculated = calcPrice?.calculated_amount !== undefined && calcPrice?.calculated_amount !== null;
+
+            if (hasCalculated && Number(calcPrice.calculated_amount) > 0) {
                 price = Number(calcPrice.calculated_amount)
                 originalPrice = Number(calcPrice.original_amount) || price
                 variant = v
                 console.log(`[ProductDebug] Found valid calculated price on variant: ${v.id} (${price})`);
                 break;
             } else if (v.prices?.length > 0) {
+                // Fallback to manual prices if calculated_price is missing or zero
                 const sdgPrice = v.prices.find((p: any) => p.currency_code?.toLowerCase() === 'sdg')
                 const priceObj = sdgPrice || v.prices[0]
                 if (priceObj.amount && Number(priceObj.amount) > 0) {
