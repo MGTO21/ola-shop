@@ -10,7 +10,8 @@
         "prestart": "mkdir -p public && ln -sf $(pwd)/dist/public/admin public/admin 2>/dev/null; true",
         "start": "medusa start",
         "dev": "medusa develop",
-        "seed": "medusa seed -f ./data/seed.json"
+        "seed": "medusa seed -f ./data/seed.json",
+        "fix-v2-access": "node fix-v2-access.js"
     },
     "dependencies": {
         "@medusajs/admin-sdk": "^2.13.1",

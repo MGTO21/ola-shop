@@ -24,6 +24,7 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      // Media Proxies (Support both old and new paths)
       {
         source: '/static/:path*',
         destination: 'http://127.0.0.1:9000/static/:path*',
@@ -32,6 +33,7 @@ const nextConfig = {
         source: '/uploads/:path*',
         destination: 'http://127.0.0.1:9000/uploads/:path*',
       },
+      // API & Auth Proxies
       {
         source: '/api/:path*',
         destination: 'http://127.0.0.1:9000/:path*',
