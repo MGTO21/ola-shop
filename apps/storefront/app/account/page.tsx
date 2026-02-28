@@ -857,7 +857,7 @@ export default function AccountPage() {
                                                     </div>
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-rose-600 font-black" dir="ltr">{formatPrice(product.variants?.[0]?.calculated_price?.calculated_amount || product.variants?.[0]?.prices?.[0]?.amount || 0)}</span>
-                                                        <button onClick={() => router.push(`/product/${product.handle || product.id}`)} className="text-[10px] font-black text-gray-400 hover:text-rose-600 underline">عرض</button>
+                                                        <button onClick={() => router.push(`/products/${product.handle || product.id}`)} className="text-[10px] font-black text-gray-400 hover:text-rose-600 underline">عرض</button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -38,23 +38,28 @@ export function getImageUrl(url?: string | null): string {
     // If it's a data URI, keep it
     if (url.startsWith("data:")) return url
 
-    // REWRITE LOGIC: Convert any backend IP/Port 9001 URL to our secure proxy
-    // This catches http://46.224.43.113:9001, ola-shop.com:9001, localhost:9001, etc.
-    if (
-        url.includes("46.224.43.113") ||
-        url.includes("ola-shop.com:9001") ||
-        url.includes("localhost:9001")
-    ) {
+    // REWRITE LOGIC: Convert any backend IP/Port 9001 URL or local URLs to our secure proxy
+    // This catches http://46.224.43.113:9001, ola-shop.com:9001, localhost:9000, etc.
+    if (url.includes("/uploads/")) {
         const parts = url.split("/uploads/")
-        if (parts.length > 1) {
-            return `/api/uploads/${parts[1]}`
-        }
+        return `/uploads/${parts[parts.length - 1]}`
     }
 
-    // Default fallback: If it's still an absolute HTTP URL, try to force it to our proxy
-    if (url.startsWith("http") && url.includes("/uploads/")) {
-        const parts = url.split("/uploads/")
-        return `/api/uploads/${parts[1]}`
+    if (url.includes("/static/")) {
+        const parts = url.split("/static/")
+        return `/static/${parts[parts.length - 1]}`
+    }
+
+    // Direct localhost/IP detection
+    if (url.includes("localhost:9000") || url.includes("127.0.0.1:9000") || url.includes("46.224.43.113")) {
+        if (url.includes("/uploads/")) {
+            const parts = url.split("/uploads/")
+            return `/uploads/${parts[parts.length - 1]}`
+        }
+        if (url.includes("/static/")) {
+            const parts = url.split("/static/")
+            return `/static/${parts[parts.length - 1]}`
+        }
     }
 
     return url

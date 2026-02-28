@@ -25,6 +25,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/static/:path*',
+        destination: 'http://127.0.0.1:9000/static/:path*',
+      },
+      {
+        source: '/uploads/:path*',
+        destination: 'http://127.0.0.1:9000/uploads/:path*',
+      },
+      {
         source: '/api/:path*',
         destination: 'http://127.0.0.1:9000/:path*',
       },
