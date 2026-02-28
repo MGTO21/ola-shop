@@ -88,10 +88,11 @@ export default function CheckoutPage() {
 
         setFormData(prev => ({ ...prev, city: cityName }))
 
-        // If the selected city belongs to a different region, update the cart's region
-        if (cart.region_id !== selectedRegion.id) {
-            setLoading(true)
-            try {
+        setLoading(true)
+        try {
+            // 1. Update Cart Region if changed
+            let currentCart = cart
+            if (cart.region_id !== selectedRegion.id) {
                 const res = await fetch(`/api/cart-proxy?id=${cart.id}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -99,13 +100,33 @@ export default function CheckoutPage() {
                 })
                 if (res.ok) {
                     const data = await res.json()
-                    setCart(data.cart)
+                    currentCart = data.cart || data
+                    setCart(currentCart)
                 }
-            } catch (e) {
-                console.error("Failed to update cart region", e)
-            } finally {
-                setLoading(false)
             }
+
+            // 2. Fetch and Add Shipping Method automatically to get calculated rates
+            const optRes = await fetch(`/api/store-proxy?resource=shipping-options&cart_id=${currentCart.id}`)
+            if (optRes.ok) {
+                const optData = await optRes.json()
+                const options = optData.shipping_options || []
+                if (options.length > 0) {
+                    // Use a simple ID to avoid sync issues during rapid clicks
+                    const shipRes = await fetch(`/api/store-proxy?resource=carts&id=${currentCart.id}&action=shipping-methods`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ option_id: options[0].id })
+                    })
+                    if (shipRes.ok) {
+                        const shipData = await shipRes.json()
+                        setCart(shipData.cart || shipData)
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Failed to sync region/shipping", e)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -211,26 +232,21 @@ export default function CheckoutPage() {
                 throw new Error(errData.message || (language === 'ar' ? "فشل تحديث معلومات التوصيل" : "Failed to update delivery info"))
             }
 
-            // Step 2: Add Shipping Method
-            console.log("[Checkout] Step 2: Adding shipping method...")
-            const shippingOptionsRes = await fetch(`/api/store-proxy?resource=shipping-options&cart_id=${cartId}`, {
-                headers: getAuthHeaders()
-            })
-            if (!shippingOptionsRes.ok) throw new Error(t.messages.error)
-
-            const shippingOptionsData = await shippingOptionsRes.json()
-            const shippingOptions = shippingOptionsData.shipping_options || []
-            const optionId = shippingOptions[0]?.id || "so_khartoum_delivery";
-
-            const shipMethodRes = await fetch(`/api/store-proxy?resource=carts&id=${cartId}&action=shipping-methods`, {
-                method: "POST",
-                headers: getAuthHeaders({ "Idempotency-Key": `ship-${cartId}` }),
-                body: JSON.stringify({ option_id: optionId })
-            })
-            if (!shipMethodRes.ok) {
-                const errData = await shipMethodRes.json().catch(() => ({}))
-                console.error("[Checkout] Shipping method failed:", errData)
-                throw new Error(t.errors.shipping_not_available)
+            // Step 2: Ensure Shipping Method is selected
+            console.log("[Checkout] Step 2: Validating shipping method...")
+            if (!cart.shipping_methods || cart.shipping_methods.length === 0) {
+                const optRes = await fetch(`/api/store-proxy?resource=shipping-options&cart_id=${cartId}`)
+                const optData = await optRes.json()
+                const options = optData.shipping_options || []
+                if (options.length > 0) {
+                    await fetch(`/api/store-proxy?resource=carts&id=${cartId}&action=shipping-methods`, {
+                        method: "POST",
+                        headers: getAuthHeaders({ "Idempotency-Key": `ship-${cartId}` }),
+                        body: JSON.stringify({ option_id: options[0].id })
+                    })
+                } else {
+                    throw new Error(t.errors.shipping_not_available)
+                }
             }
 
             // Step 3: Get or Create Payment Collection
