@@ -12,6 +12,23 @@ import { ProductCardSkeleton } from "@/components/ui/Skeletons"
 export default async function Home() {
     return (
         <main className="min-h-screen bg-transparent">
+            {/* SEO Hidden Content for indexing */}
+            <section className="sr-only">
+                <h1>متجر العلا - Ola Shop - Ola Store</h1>
+                <h2>أفضل متجر إلكتروني في السودان للعبايات والبخور ومستحضرات التجميل</h2>
+                <p>
+                    تسوقي أحدث تشكيلات العبايات الخليجية، عبايات الاستقبال، والفساتين السودانية العصرية.
+                    نتميز في متجر العلا بتوفير أرقى أنواع البخور السوداني، بخور الصندل، وخمرة العرايس.
+                    نوفر لكِ مكياج أصلي 100% ومنتجات عناية بالبشرة من أفضل الماركات العالمية (لوريال، سيروم فيتامين C).
+                    استمتعي بتجربة تسوق آمنة مع خدمة الدفع عند الاستلام وتوصيل سريع إلى الخرطوم وجميع مدن السودان.
+                </p>
+                <ul>
+                    <li>عبايات كريب سعودي ومطرزة</li>
+                    <li>بخور عدني ومعمول فخم</li>
+                    <li>إكسسوارات وساعات ماركات أصلية</li>
+                    <li>هدايا نسائية وتجهيز عرايس</li>
+                </ul>
+            </section>
 
             <div className="container mx-auto px-4 py-8 space-y-12">
                 {/* Top Promotional Banner */}

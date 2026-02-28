@@ -29,9 +29,13 @@ const cairo = Cairo({
 })
 
 export const metadata: Metadata = {
-    title: "Ola Shop - Premium Beauty & Cosmetics | متجر العلا",
-    description: "Discover authentic beauty products, makeup, skincare, and fragrances. Fast delivery across Sudan.",
-    keywords: ["beauty", "cosmetics", "makeup", "skincare", "fragrance", "Sudan", "Port Sudan"],
+    title: "متجر العلا | Ola Shop - Ola Store | عبايات، بخور سوداني، ومنتجات تجميل أصلية",
+    description: "متجر العلا (Ola Shop) الخيار الأول للمرأة السودانية: عبايات خليجية، بخور صندل، عطور تجهيز عرايس، ومكياج أصلي 100%. شحن سريع في السودان والدفع عند الاستلام.",
+    keywords: [
+        "متجر العلا", "Ola Shop", "Ola Store", "عبايات خليجية", "عبايات استقبال", "فساتين خروج سودانية",
+        "بخور سوداني", "خمرة سودانية", "ريحة سودانية", "بخور صندل", "مكياج أصلي", "سودان", "كريمات تجميل",
+        "توصيل عبايات الخرطوم", "دفع عند الاستلام السودان", "منتجات تجميل أصلية"
+    ],
 }
 
 export default function RootLayout({
