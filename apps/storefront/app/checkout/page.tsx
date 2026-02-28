@@ -82,37 +82,35 @@ export default function CheckoutPage() {
         fetchRegions()
     }, [])
 
-    const handleCityChange = async (cityName: string) => {
-        const selectedRegion = regions.find(r => r.name === cityName)
-        if (!selectedRegion || !cart) return
+    const syncShipping = async (targetCart: any, targetRegionId?: string) => {
+        if (!targetCart || !regions.length) return
 
-        setFormData(prev => ({ ...prev, city: cityName }))
+        const regionId = targetRegionId || targetCart.region_id
+        const currentRegion = regions.find(r => r.id === regionId)
+        if (!currentRegion) return
 
-        setLoading(true)
         try {
-            // 1. Update Cart Region if changed
-            let currentCart = cart
-            if (cart.region_id !== selectedRegion.id) {
-                const res = await fetch(`/api/cart-proxy?id=${cart.id}`, {
+            // 1. Update Cart Region if needed
+            let updatedCart = targetCart
+            if (targetCart.region_id !== regionId) {
+                const res = await fetch(`/api/cart-proxy?id=${targetCart.id}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ region_id: selectedRegion.id })
+                    body: JSON.stringify({ region_id: regionId })
                 })
                 if (res.ok) {
                     const data = await res.json()
-                    currentCart = data.cart || data
-                    setCart(currentCart)
+                    updatedCart = data.cart || data
                 }
             }
 
-            // 2. Fetch and Add Shipping Method automatically to get calculated rates
-            const optRes = await fetch(`/api/store-proxy?resource=shipping-options&cart_id=${currentCart.id}`)
+            // 2. Add Shipping Method automatically to get calculated rates
+            const optRes = await fetch(`/api/store-proxy?resource=shipping-options&cart_id=${updatedCart.id}`)
             if (optRes.ok) {
                 const optData = await optRes.json()
                 const options = optData.shipping_options || []
                 if (options.length > 0) {
-                    // Use a simple ID to avoid sync issues during rapid clicks
-                    const shipRes = await fetch(`/api/store-proxy?resource=carts&id=${currentCart.id}&action=shipping-methods`, {
+                    const shipRes = await fetch(`/api/store-proxy?resource=carts&id=${updatedCart.id}&action=shipping-methods`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ option_id: options[0].id })
@@ -124,11 +122,26 @@ export default function CheckoutPage() {
                 }
             }
         } catch (e) {
-            console.error("Failed to sync region/shipping", e)
-        } finally {
-            setLoading(false)
+            console.error("Shipping sync failed", e)
         }
     }
+
+    const handleCityChange = async (cityName: string) => {
+        const selectedRegion = regions.find(r => r.name === cityName)
+        if (!selectedRegion || !cart) return
+
+        setFormData(prev => ({ ...prev, city: cityName }))
+        setLoading(true)
+        await syncShipping(cart, selectedRegion.id)
+        setLoading(false)
+    }
+
+    // Trigger initial sync when cart and regions are both ready
+    useEffect(() => {
+        if (cart && regions.length > 0 && !cart.shipping_methods?.length) {
+            syncShipping(cart)
+        }
+    }, [cart?.id, regions.length])
 
     useEffect(() => {
         const fetchCart = async () => {
