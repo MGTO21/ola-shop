@@ -1,4 +1,6 @@
 import { Suspense } from "react"
+
+export const dynamic = 'force-dynamic'
 import { Hero } from "@/components/home/Hero"
 import { FeaturedProducts } from "@/components/home/FeaturedProducts"
 import { Categories } from "@/components/home/Categories"
