@@ -158,11 +158,11 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <div className={`group bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-rose-100/50 flex flex-col h-full ${language === 'ar' ? 'font-arabic' : 'font-sans'}`} dir={dir}>
-            <Link href={`/products/${product.id}`} className="block relative aspect-square bg-gradient-to-br from-gray-50/50 to-rose-50/30 p-2 md:p-4 overflow-hidden">
+        <div className={`group bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full ${language === 'ar' ? 'font-arabic' : 'font-sans'}`} dir={dir}>
+            <Link href={`/products/${product.id}`} className="block relative aspect-square bg-gray-50/50 p-2 md:p-4 overflow-hidden">
                 {isNew && (
                     <div className={`absolute top-3 z-10 ${language === 'ar' ? 'right-3' : 'left-3'}`}>
-                        <span className="bg-emerald-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                        <span className="bg-emerald-500 text-white text-[9px] md:text-[10px] font-black px-3 py-1 rounded-full shadow-lg shadow-emerald-100 uppercase tracking-widest">
                             {t.products.new_badge}
                         </span>
                     </div>
@@ -170,7 +170,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 {hasDiscount && (
                     <div className={`absolute top-3 z-10 ${language === 'ar' ? 'left-3' : 'right-3'}`}>
-                        <span className="bg-rose-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
+                        <span className="bg-rose-600 text-white text-[9px] md:text-[10px] font-black px-3 py-1 rounded-full shadow-lg shadow-rose-100">
                             {discountPercentage}%-
                         </span>
                     </div>
@@ -185,11 +185,12 @@ export function ProductCard({ product }: ProductCardProps) {
                     onError={() => setImgSrc("/logo.png")}
                 />
 
-                <div className="absolute inset-0 bg-rose-900/0 group-hover:bg-rose-900/5 transition-colors duration-500" />
+                {/* Subtle overlay on hover */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
             </Link>
 
-            <div className="p-3 md:p-5 flex flex-col flex-1">
-                <div className="mb-2 md:mb-4 flex-1">
+            <div className="p-4 md:p-6 flex flex-col flex-1">
+                <div className="mb-3 md:mb-5 flex-1">
                     <Link href={`/products/${product.id}`}>
                         <h3 className={`text-gray-900 font-bold text-sm md:text-lg line-clamp-2 min-h-[40px] md:min-h-[56px] hover:text-rose-600 transition-colors leading-tight ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                             {product.title}
@@ -197,13 +198,13 @@ export function ProductCard({ product }: ProductCardProps) {
                     </Link>
                 </div>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                     <div className={`flex items-baseline gap-2 ${language === 'ar' ? 'flex-row' : 'flex-row-reverse justify-end'}`}>
-                        <span className="text-lg md:text-2xl font-black text-rose-600">
+                        <span className="text-xl md:text-3xl font-black text-rose-600">
                             {formatPrice(numPrice)}
                         </span>
                         {hasDiscount && (
-                            <span className="text-xs md:text-sm text-gray-400 line-through decoration-rose-500/30">
+                            <span className="text-xs md:text-sm text-gray-400 line-through decoration-rose-500/50">
                                 {formatPrice(numOriginal)}
                             </span>
                         )}
@@ -212,23 +213,28 @@ export function ProductCard({ product }: ProductCardProps) {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={toggleWishlist}
-                            className={`p-2.5 md:p-3 rounded-2xl transition-all shadow-sm border ${isWishlisted ? 'bg-rose-50 border-rose-200 text-rose-600' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-rose-600 hover:bg-rose-50/50'}`}
+                            className={`p-3 md:p-4 rounded-2xl transition-all shadow-sm border ${isWishlisted ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-rose-600 hover:bg-rose-50/50'}`}
                             title={isWishlisted ? t.products.wishlist_remove : t.products.wishlist_add}
                         >
-                            <Heart className={`w-4 h-4 md:w-5 md:h-5 ${isWishlisted ? 'fill-rose-600' : ''}`} />
+                            <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600' : ''}`} />
                         </button>
                         <button
                             onClick={handleAddToCart}
                             disabled={isAdding}
-                            className="bg-gray-900 hover:bg-rose-700 text-white p-2.5 md:p-3 rounded-2xl transition-all shadow-lg hover:shadow-rose-200 flex-1 flex items-center justify-center gap-2 text-xs md:text-base font-bold select-none active:scale-95"
-                            title={t.products.add_to_cart}
+                            className={`flex-1 flex items-center justify-center gap-2 py-3 md:py-4 rounded-2xl transition-all font-black text-sm md:text-base shadow-lg active:scale-95 ${isAdded
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-gray-900 text-white hover:bg-rose-600 shadow-gray-200 hover:shadow-rose-100'
+                                }`}
                         >
                             {isAdded ? (
-                                <> <Check className="w-4 h-4" /> </>
+                                <Check className="w-5 h-5" />
                             ) : isAdding ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
-                                <> <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden xs:inline">{t.products.add_to_cart}</span> </>
+                                <>
+                                    <ShoppingCart className="w-5 h-5" />
+                                    <span className="hidden xs:inline">{t.products.add_to_cart}</span>
+                                </>
                             )}
                         </button>
                     </div>
