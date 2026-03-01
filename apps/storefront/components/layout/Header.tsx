@@ -173,10 +173,10 @@ export function Header() {
                     </nav>
 
                     {/* ACTION ICONS */}
-                    <div className="flex items-center gap-1 md:gap-2 lg:gap-3 relative z-20">
+                    <div className="flex items-center gap-1 md:gap-2 lg:gap-3 relative z-30">
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 relative z-30"
                             title={t.header.search_label}
                         >
                             <Search className="w-5 h-5 md:w-6 md:h-6" />
@@ -184,7 +184,7 @@ export function Header() {
 
                         <button
                             onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 flex items-center justify-center"
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 flex items-center justify-center relative z-30"
                             title={language === 'ar' ? 'English' : 'العربية'}
                         >
                             <Globe className="w-5 h-5 md:w-6 md:h-6" />
@@ -192,7 +192,7 @@ export function Header() {
 
                         <Link
                             href="/account?tab=wishlist"
-                            className="relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
+                            className="relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 z-30"
                             title={t.account.wishlist}
                         >
                             <Heart className="w-5 h-5 md:w-6 md:h-6" />
@@ -205,7 +205,7 @@ export function Header() {
 
                         <Link
                             href="/cart"
-                            className={`relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 ${cartShaking ? 'animate-bounce' : ''}`}
+                            className={`relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 z-30 ${cartShaking ? 'animate-bounce' : ''}`}
                             title={t.header.cart_label}
                         >
                             <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
@@ -216,7 +216,7 @@ export function Header() {
 
                         <Link
                             href="/account"
-                            className="hidden md:flex p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
+                            className="hidden md:flex p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 z-30"
                             title={t.account.title}
                         >
                             <User className="w-6 h-6" />
@@ -227,11 +227,13 @@ export function Header() {
 
             {/* POPUP FREE SHIPPING BAR (Slides Down) */}
             <div
-                className={`absolute left-0 right-0 z-10 transition-all duration-700 ease-out transform ${showShippingBar ? 'translate-y-0 opacity-100 shadow-xl' : '-translate-y-full opacity-0'
+                className={`absolute left-0 right-0 z-10 transition-all duration-700 ease-out transform ${showShippingBar
+                    ? 'translate-y-0 opacity-100 visible shadow-xl pointer-events-auto'
+                    : '-translate-y-full opacity-0 invisible pointer-events-none'
                     }`}
                 style={{ top: '100%' }}
             >
-                <div className="bg-white/90 backdrop-blur-md border-t border-b border-rose-100 p-3">
+                <div className="bg-white/95 backdrop-blur-md border-t border-b border-rose-100 p-3">
                     <div className="container mx-auto max-w-4xl">
                         <div className="flex items-center justify-between mb-1 text-xs md:text-sm font-bold text-gray-800">
                             <span>{progress.toFixed(0)}%</span>
