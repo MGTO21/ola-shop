@@ -126,6 +126,8 @@ interface Translations {
         no_description: string
         not_available: string
         wishlist_error: string
+        available_label: string
+        guarantee_label: string
         terms: string
         shipping_policy: string
         returns_policy: string
@@ -447,6 +449,8 @@ const translations: Record<Language, Translations> = {
             no_description: "لا يوجد وصف متوفر لهذا المنتج حالياً.",
             not_available: "عذراً، هذا المنتج غير متوفر حالياً",
             wishlist_error: "عذراً، فشل تحديث المفضلة",
+            available_label: "متوفر حالياً",
+            guarantee_label: "ضمان العُلا",
             terms: "شروط الخدمة",
             shipping_policy: "سياسة الشحن",
             returns_policy: "سياسة الإرجاع",
@@ -776,6 +780,8 @@ const translations: Record<Language, Translations> = {
             no_description: "Currently, there is no description available for this product.",
             not_available: "Sorry, this product is currently not available",
             wishlist_error: "Sorry, failed to update wishlist",
+            available_label: "In Stock",
+            guarantee_label: "Ola Guarantee",
             terms: "Terms of Service",
             shipping_policy: "Shipping Policy",
             returns_policy: "Return Policy",
