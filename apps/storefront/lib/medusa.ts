@@ -48,69 +48,38 @@ export async function getProducts(params?: {
 }
 
 // Helper function to get single product
-export async function getProduct(id: string, queryParams?: any) {
-    const region_id = 'reg_01KC1R1XZRG584Y15RKTAR51N5';
-    // Explicit Medusa v2 field paths to ensure all price and category data is returned
-    const fields = queryParams?.fields || "*,variants.calculated_price,variants.prices,categories";
+export async function getProduct(id: string) {
+    const fields = "*variants.calculated_price"; // Same as getProducts
     const decodedId = decodeURIComponent(id);
 
-    console.log(`[MedusaServer] getProduct initiated for: "${id}" (Decoded: "${decodedId}")`);
+    console.log(`[MedusaServer] getProduct initiated for: "${id}"`);
 
     try {
-        // 1. Try direct retrieve for IDs (prod_...)
+        // Use list instead of retrieve, as list handles prices more consistently for v2
+        const queryParams: any = {
+            fields,
+            limit: 1
+        }
+
         if (id.startsWith('prod_')) {
-            try {
-                // @ts-ignore
-                const response = await medusaClient.products.retrieve(id, {
-                    fields
-                });
-                if (response.product) {
-                    const p = response.product;
-                    const v = p.variants?.[0];
-                    console.log(`[MedusaServer] Found by ID: "${p.title}" | Variant 1 Price: ${v?.calculated_price?.calculated_amount} | Prices Array: ${v?.prices?.length}`);
-                    return p;
-                }
-            } catch (e: any) {
-                console.warn(`[MedusaServer] Retrieve by ID failed: ${e.message}`);
-            }
+            queryParams.id = [id]
+        } else {
+            queryParams.handle = [id, decodedId]
         }
 
-        // 2. Try list by handle (Very aggressive)
-        const handlesToTry = [id, decodedId].filter((v, i, a) => a.indexOf(v) === i);
+        const { products } = await medusaClient.products.list(queryParams)
 
-        for (const h of handlesToTry) {
-            console.log(`[MedusaServer] Searching by handle: "${h}"`);
-            const { products } = await medusaClient.products.list({
-                handle: h,
-                fields
-                // region_id omitted for list just like home page to ensure robust return
-            });
-
-            if (products && products.length > 0) {
-                const p = products[0];
-                const v = p.variants?.[0];
-                console.log(`[MedusaServer] Found by handle: "${p.title}" | Prices Array: ${v?.prices?.length}`);
-                return p;
-            }
+        if (products && products.length > 0) {
+            const p = products[0]
+            console.log(`[MedusaServer] Found product: "${p.title}" | Price: ${p.variants?.[0]?.calculated_price?.calculated_amount}`);
+            return p
         }
 
-        // 3. Last ditch search
-        const { products: searchResults } = await medusaClient.products.list({
-            q: decodedId,
-            fields
-        });
-
-        if (searchResults && searchResults.length > 0) {
-            const bestMatch = searchResults.find((p: any) => p.handle === decodedId || p.title === decodedId) || searchResults[0];
-            console.log(`[MedusaServer] Found by search: "${bestMatch.title}"`);
-            return bestMatch;
-        }
-
-        console.error(`[MedusaServer] Product NOT FOUND in any attempt: "${id}"`);
+        console.error(`[MedusaServer] Product NOT FOUND: "${id}"`);
         return null;
 
     } catch (error: any) {
-        console.error(`[MedusaServer] Critical error in getProduct("${id}"):`, error.message);
+        console.error(`[MedusaServer] Error in getProduct("${id}"):`, error.message);
         return null;
     }
 }
