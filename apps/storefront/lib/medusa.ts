@@ -62,8 +62,7 @@ export async function getProduct(id: string, queryParams?: any) {
             try {
                 // @ts-ignore
                 const response = await medusaClient.products.retrieve(id, {
-                    fields,
-                    region_id
+                    fields
                 });
                 if (response.product) {
                     const p = response.product;
@@ -133,7 +132,6 @@ export async function getRelatedProducts(productId: string, categoryIds?: string
         const params: any = {
             limit: 4,
             fields: "*variants.calculated_price",
-            region_id: 'reg_01KC1R1XZRG584Y15RKTAR51N5',
         }
 
         if (categoryIds && categoryIds.length > 0) {
