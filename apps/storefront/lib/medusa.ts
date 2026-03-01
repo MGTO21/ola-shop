@@ -51,7 +51,7 @@ export async function getProducts(params?: {
 export async function getProduct(id: string, queryParams?: any) {
     const region_id = 'reg_01KC1R1XZRG584Y15RKTAR51N5';
     // Explicit Medusa v2 field paths to ensure all price and category data is returned
-    const fields = queryParams?.fields || "*,variants.*,variants.calculated_price.*,variants.prices.*,categories.*";
+    const fields = queryParams?.fields || "*,variants.calculated_price,variants.prices,categories";
     const decodedId = decodeURIComponent(id);
 
     console.log(`[MedusaServer] getProduct initiated for: "${id}" (Decoded: "${decodedId}")`);
