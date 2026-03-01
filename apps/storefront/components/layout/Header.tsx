@@ -125,11 +125,11 @@ export function Header() {
             <div className="relative bg-white/80 backdrop-blur-md border-b border-rose-100 shadow-sm transition-all duration-300 h-16 md:h-24">
                 <div className="container mx-auto h-full px-4 flex items-center justify-between gap-4">
 
-                    {/* LEFT/RIGHT (based on dir): Mobile Menu & Search */}
-                    <div className="flex items-center gap-1 md:hidden">
+                    {/* LEFT (based on dir): Mobile Menu */}
+                    <div className="flex items-center md:hidden min-w-[40px]">
                         <button
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="p-2 text-gray-700 hover:bg-rose-50 rounded-xl transition-colors"
+                            className="p-2 text-gray-700 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
                             aria-label={t.header.menu_label}
                         >
                             <Menu className="w-6 h-6" />
@@ -137,33 +137,35 @@ export function Header() {
                     </div>
 
                     {/* BRANDING: Unified Logo & Name */}
-                    <Link href="/" className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none justify-center md:justify-start">
-                        <div className="relative w-10 h-10 md:w-16 md:h-16 flex-shrink-0">
-                            <Image
-                                src="/logo.png"
-                                alt="Ola Shop Logo"
-                                fill
-                                className="object-contain"
-                                priority
-                            />
-                        </div>
-                        <div className="flex flex-col -gap-1">
-                            <span className="text-xl md:text-3xl font-black bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent font-serif leading-tight">
-                                Ola Shop
-                            </span>
-                            <span className="hidden xs:block text-[8px] md:text-xs text-rose-400 font-bold tracking-[0.2em] uppercase">
-                                {t.header.ola_store}
-                            </span>
-                        </div>
-                    </Link>
+                    <div className="flex-1 flex justify-center md:justify-start overflow-hidden">
+                        <Link href="/" className="flex items-center gap-2 md:gap-4 max-w-full">
+                            <div className="relative w-9 h-9 md:w-16 md:h-16 flex-shrink-0">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Ola Shop Logo"
+                                    fill
+                                    className="object-contain"
+                                    priority
+                                />
+                            </div>
+                            <div className="flex flex-col -gap-1 truncate">
+                                <span className="text-lg md:text-3xl font-black bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent font-serif leading-tight">
+                                    Ola Shop
+                                </span>
+                                <span className="hidden xs:block text-[8px] md:text-xs text-rose-400 font-bold tracking-[0.2em] uppercase truncate">
+                                    {t.header.ola_store}
+                                </span>
+                            </div>
+                        </Link>
+                    </div>
 
                     {/* DESKTOP NAV */}
-                    <nav className="hidden md:flex items-center gap-8 ml-8">
+                    <nav className="hidden md:flex items-center gap-8 px-4">
                         {categories.map((cat) => (
                             <Link
                                 key={cat.name}
                                 href={cat.href}
-                                className="text-gray-800 hover:text-rose-600 font-bold text-sm lg:text-base transition-colors"
+                                className="text-gray-800 hover:text-rose-600 font-bold text-sm lg:text-base transition-colors whitespace-nowrap"
                             >
                                 {cat.name}
                             </Link>
@@ -171,10 +173,10 @@ export function Header() {
                     </nav>
 
                     {/* ACTION ICONS */}
-                    <div className="flex items-center gap-1 md:gap-3">
+                    <div className="flex items-center gap-1 md:gap-3 relative z-10">
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
                             title={t.header.search_label}
                         >
                             <Search className="w-5 h-5 md:w-6 md:h-6" />
@@ -182,14 +184,14 @@ export function Header() {
 
                         <button
                             onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all hidden xs:flex"
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 flex"
                         >
                             <Globe className="w-5 h-5 md:w-6 md:h-6" />
                         </button>
 
                         <Link
                             href="/account?tab=wishlist"
-                            className="relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                            className="relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
                         >
                             <Heart className="w-5 h-5 md:w-6 md:h-6" />
                             {wishlistCount > 0 && (
@@ -201,7 +203,7 @@ export function Header() {
 
                         <Link
                             href="/cart"
-                            className={`relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all ${cartShaking ? 'animate-bounce' : ''}`}
+                            className={`relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90 ${cartShaking ? 'animate-bounce' : ''}`}
                         >
                             <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
                             <span className="absolute top-1 right-1 bg-rose-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white shadow-sm">
@@ -211,7 +213,7 @@ export function Header() {
 
                         <Link
                             href="/account"
-                            className="hidden md:flex p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                            className="hidden md:flex p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
                         >
                             <User className="w-6 h-6" />
                         </Link>
