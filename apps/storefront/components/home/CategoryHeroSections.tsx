@@ -45,44 +45,14 @@ interface MedusaProduct {
 
 import { CategoryHeroSkeleton } from '@/components/ui/Skeletons'
 import { useLanguage } from '@/lib/context/LanguageContext'
+import { useRef } from 'react'
+import { ArrowLeft, ArrowRight as ArrowRightIcon } from 'lucide-react'
 
 export function CategoryHeroSections() {
     const { t, dir, language } = useLanguage()
     const [heroSections, setHeroSections] = useState<HeroSection[]>([])
     const [productsByCategory, setProductsByCategory] = useState<Record<string, MedusaProduct[]>>({})
-    const [addingToCart, setAddingToCart] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
-
-    const handleAddToCart = async (product: MedusaProduct) => {
-        const variantId = product.variants?.[0]?.id
-        if (!variantId) return
-
-        setAddingToCart(product.id)
-        try {
-            const cartId = localStorage.getItem('cart_id')
-            const res = await fetch(`/api/cart-proxy?id=${cartId || ''}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    variant_id: variantId,
-                    quantity: 1
-                })
-            })
-
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.error || "Failed")
-
-            const newCartId = data.cart?.id || data.id
-            if (newCartId) {
-                localStorage.setItem('cart_id', newCartId)
-                window.dispatchEvent(new CustomEvent('cart-updated'))
-            }
-        } catch (error) {
-            console.error("Error adding to cart:", error)
-        } finally {
-            setAddingToCart(null)
-        }
-    }
 
     useEffect(() => {
         // Load hero sections config
@@ -124,7 +94,7 @@ export function CategoryHeroSections() {
                         }
                     }
                     if (!grouped[assignedCategory]) grouped[assignedCategory] = []
-                    if (grouped[assignedCategory].length < 4) {
+                    if (grouped[assignedCategory].length < 10) { // Limit to 10 for carousel
                         grouped[assignedCategory].push(product)
                     }
                 })
@@ -199,13 +169,13 @@ export function CategoryHeroSections() {
                                         className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
                                     >
                                         <span>{t.home.shop_now}</span>
-                                        <ArrowRight className={`w-5 h-5 ${language === 'ar' ? 'rotate-180' : ''}`} />
+                                        <ArrowRightIcon className={`w-5 h-5 ${language === 'ar' ? 'rotate-180' : ''}`} />
                                     </Link>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Bottom Half - Featured Products */}
+                        {/* Bottom Half - Featured Products Carousel */}
                         {hero.showFeaturedProducts && categoryProducts.length > 0 && (
                             <div className="p-6 md:p-8">
                                 <div className="flex items-center justify-between mb-6">
@@ -216,36 +186,12 @@ export function CategoryHeroSections() {
                                         href={`/products?category=${hero.category}&featured=true`}
                                         className="text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1"
                                     >
-                                        <span>{t.products.view_details === 'عرض التفاصيل' ? 'عرض الكل' : 'View All'}</span>
-                                        <ArrowRight className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
+                                        <span>{language === 'ar' ? 'عرض الكل' : 'View All'}</span>
+                                        <ArrowRightIcon className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
                                     </Link>
                                 </div>
 
-                                {/* Horizontal Scrollable Cards */}
-                                <div className="relative">
-                                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth snap-x snap-mandatory" dir={dir}>
-                                        {categoryProducts.map((product) => (
-                                            <div
-                                                key={product.id}
-                                                className="flex-shrink-0 w-64 md:w-72 lg:w-80 snap-start"
-                                            >
-                                                <ProductCard product={product} />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Scroll Indicators */}
-                                    <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none">
-                                        <div className="flex justify-between px-2">
-                                            <div className="w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center pointer-events-auto cursor-pointer hover:bg-white">
-                                                <ArrowRight className={`w-5 h-5 text-gray-600 ${language === 'ar' ? '' : 'rotate-180'}`} />
-                                            </div>
-                                            <div className="w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center pointer-events-auto cursor-pointer hover:bg-white">
-                                                <ArrowRight className={`w-5 h-5 text-gray-600 ${language === 'ar' ? 'rotate-180' : ''}`} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <CategoryProductCarousel products={categoryProducts} dir={dir} />
                             </div>
                         )}
 
@@ -258,6 +204,59 @@ export function CategoryHeroSections() {
                     </section>
                 )
             })}
+        </div>
+    )
+}
+
+function CategoryProductCarousel({ products, dir }: { products: MedusaProduct[], dir: string }) {
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 350
+            scrollContainerRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            })
+        }
+    }
+
+    return (
+        <div className="relative">
+            <div
+                ref={scrollContainerRef}
+                className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth snap-x snap-mandatory"
+                dir={dir}
+            >
+                {products.map((product) => (
+                    <div
+                        key={product.id}
+                        className="flex-shrink-0 w-64 md:w-72 lg:w-80 snap-start"
+                    >
+                        <ProductCard product={product} />
+                    </div>
+                ))}
+            </div>
+
+            {/* Scroll Buttons */}
+            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none hidden md:block">
+                <div className="flex justify-between px-2">
+                    <button
+                        onClick={() => scroll(dir === 'rtl' ? 'right' : 'left')}
+                        className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center pointer-events-auto cursor-pointer hover:bg-rose-500 hover:text-white hover:scale-110 transition-all border border-gray-100"
+                        aria-label="Previous"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                        onClick={() => scroll(dir === 'rtl' ? 'left' : 'right')}
+                        className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center pointer-events-auto cursor-pointer hover:bg-rose-500 hover:text-white hover:scale-110 transition-all border border-gray-100"
+                        aria-label="Next"
+                    >
+                        <ArrowRightIcon className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }
