@@ -113,118 +113,109 @@ export function Header() {
     }, [])
 
     return (
-        <header className={`sticky top-0 z-40 relative transition-all duration-300 ${language === 'ar' ? 'font-arabic' : 'font-sans'}`} dir={dir}>
+        <header className={`sticky top-0 z-40 transition-all duration-300 ${language === 'ar' ? 'font-arabic' : 'font-sans'}`} dir={dir}>
+            {/* 1. TOP ANNOUNCEMENT BAR (HIDDEN ON MOBILE TO SAVE SPACE) */}
+            <div className="hidden md:flex bg-rose-700 text-white py-1 px-4 font-bold justify-end items-center h-8 shadow-sm relative z-50">
+                <span className="flex items-center gap-2 font-sans text-xs">
+                    <span dir="ltr" className="font-mono text-white inline-block text-sm">+249 121 013 939</span> :{t.header.customer_service}
+                </span>
+            </div>
 
-            {/* MAIN NAVBAR CONTAINER */}
-            <div className="relative z-20 shadow-xl overflow-hidden h-[120px] md:h-[180px] border-b border-rose-200">
+            {/* 2. MAIN NAVBAR: Glassmorphism Design */}
+            <div className="relative bg-white/80 backdrop-blur-md border-b border-rose-100 shadow-sm transition-all duration-300 h-16 md:h-24">
+                <div className="container mx-auto h-full px-4 flex items-center justify-between gap-4">
 
-                {/* BACKGROUND */}
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-[#FFF0F5]"></div>
-                    <Image
-                        src={BG_IMAGE_URL}
-                        alt="Header Texture"
-                        fill
-                        sizes="100vw"
-                        className="object-cover opacity-100"
-                        priority
-                    />
-                </div>
-
-                <div className="relative z-10 w-full flex flex-col h-full">
-                    {/* Top Bar */}
-                    <div className={`bg-rose-700/95 text-white py-0.5 px-4 font-bold flex ${language === 'ar' ? 'justify-end' : 'justify-start'} items-center h-6 shadow-sm backdrop-blur-md relative z-50`}>
-                        <span className="flex items-center gap-2 font-sans text-[10px]">
-                            <span dir="ltr" className="font-mono text-white inline-block text-xs">+249 121 013 939</span> :{t.header.customer_service}
-                        </span>
+                    {/* LEFT/RIGHT (based on dir): Mobile Menu & Search */}
+                    <div className="flex items-center gap-1 md:hidden">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="p-2 text-gray-700 hover:bg-rose-50 rounded-xl transition-colors"
+                            aria-label={t.header.menu_label}
+                        >
+                            <Menu className="w-6 h-6" />
+                        </button>
                     </div>
 
-                    {/* Main Header Content */}
-                    <div className="container mx-auto px-4 py-2 relative flex-1 flex items-center justify-between">
-
-                        {/* 1. LOGO: EDGE-TO-EDGE FIX */}
-                        {/* Increased scale, changed origin, full height */}
-                        <div className="absolute top-0 bottom-0 left-0 z-[100] h-full aspect-square flex items-center bg-transparent">
-                            <Link href="/" className="relative block w-full h-full transform hover:scale-110 transition-transform duration-300">
-                                <Image
-                                    src="/logo.png"
-                                    alt="Ola Shop Logo"
-                                    fill
-                                    sizes="(max-width: 768px) 80px, 120px"
-                                    // Using object-cover to Fill, scale-125 to zoom in and remove whitespace borders
-                                    className="object-cover md:object-contain object-left scale-125 origin-left"
-                                    priority
-                                />
-                            </Link>
+                    {/* BRANDING: Unified Logo & Name */}
+                    <Link href="/" className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none justify-center md:justify-start">
+                        <div className="relative w-10 h-10 md:w-16 md:h-16 flex-shrink-0">
+                            <Image
+                                src="/logo.png"
+                                alt="Ola Shop Logo"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
                         </div>
-
-                        {/* 2. CENTER: Text Brand (Hidden on small mobile to prevent overlap) */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 px-[80px] md:px-0">
-                            <div className="flex flex-col items-center pointer-events-auto transform translate-y-1 text-center">
-                                <h1 className="text-2xl md:text-5xl font-black bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent font-serif tracking-tight drop-shadow-sm leading-none">
-                                    Ola Shop
-                                </h1>
-                                <span className={`hidden xs:block text-[10px] md:text-lg text-gray-900 font-black tracking-[0.2em] uppercase mt-1 drop-shadow-md`}>
-                                    {t.header.ola_store}
-                                </span>
-                            </div>
+                        <div className="flex flex-col -gap-1">
+                            <span className="text-xl md:text-3xl font-black bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent font-serif leading-tight">
+                                Ola Shop
+                            </span>
+                            <span className="hidden xs:block text-[8px] md:text-xs text-rose-400 font-bold tracking-[0.2em] uppercase">
+                                {t.header.ola_store}
+                            </span>
                         </div>
+                    </Link>
 
-                        {/* 3. RIGHT: Icons */}
-                        <div className="ml-auto flex items-center gap-4 z-50">
-                            <button
-                                onClick={() => setIsSearchOpen(true)}
-                                className="flex items-center justify-center text-black hover:text-rose-600 transition-colors p-2 hover:bg-white/40 rounded-full"
-                                title={t.header.search_label}
-                                aria-label={t.header.search_label}
+                    {/* DESKTOP NAV */}
+                    <nav className="hidden md:flex items-center gap-8 ml-8">
+                        {categories.map((cat) => (
+                            <Link
+                                key={cat.name}
+                                href={cat.href}
+                                className="text-gray-800 hover:text-rose-600 font-bold text-sm lg:text-base transition-colors"
                             >
-                                <Search className="w-6 h-6" />
-                            </button>
-                            <button
-                                onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                                className="flex items-center justify-center text-black hover:text-rose-600 transition-colors p-2 hover:bg-white/40 rounded-full"
-                                title={t.header.language_label}
-                                aria-label={t.header.language_label}
-                            >
-                                <Globe className="w-6 h-6" />
-                            </button>
-                            <Link href="/account" className="hidden md:block text-black hover:text-rose-600 transition-colors p-2 hover:bg-white/40 rounded-full" title={t.header.login_label} aria-label={t.header.login_label}><User className="w-6 h-6" /></Link>
-
-                            <Link href="/account?tab=wishlist" className="relative text-black hover:text-rose-600 transition-colors p-2 hover:bg-white/40 rounded-full" title={t.header.wishlist_label} aria-label={`${t.header.wishlist_label} (${wishlistCount})`}>
-                                <Heart className="w-6 h-6" />
-                                {wishlistCount > 0 && (
-                                    <span className="absolute top-0 right-0 bg-rose-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full shadow-md font-bold border-white border">
-                                        {wishlistCount}
-                                    </span>
-                                )}
+                                {cat.name}
                             </Link>
-
-                            <Link href="/cart" className={`relative text-black hover:text-rose-600 transition-colors p-2 hover:bg-white/40 rounded-full ${cartShaking ? 'animate-bounce text-rose-600' : ''}`} title={t.header.cart_label} aria-label={`${t.header.cart_label} (${cartCount})`}>
-                                <ShoppingCart className="w-6 h-6" />
-                                {/* DYNAMIC CART COUNT */}
-                                <span className="absolute top-0 right-0 bg-rose-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full shadow-md font-bold border-white border">
-                                    {cartCount}
-                                </span>
-                            </Link>
-
-                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-black p-1" aria-label={t.header.menu_label}>
-                                <Menu className="w-7 h-7" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Nav */}
-                    <nav className="hidden md:flex justify-center border-t border-rose-900/10 bg-white/40 backdrop-blur-sm h-10 shadow-sm relative z-40">
-                        <ul className="flex items-center gap-6 h-full">
-                            {categories.map((cat) => (
-                                <li key={cat.name}>
-                                    <Link href={cat.href} className={`text-gray-900 hover:text-rose-700 font-extrabold text-base transition-all hover:tracking-wide ${language === 'ar' ? 'font-arabic' : 'font-sans'}`}>
-                                        {cat.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                        ))}
                     </nav>
+
+                    {/* ACTION ICONS */}
+                    <div className="flex items-center gap-1 md:gap-3">
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                            title={t.header.search_label}
+                        >
+                            <Search className="w-5 h-5 md:w-6 md:h-6" />
+                        </button>
+
+                        <button
+                            onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+                            className="p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all hidden xs:flex"
+                        >
+                            <Globe className="w-5 h-5 md:w-6 md:h-6" />
+                        </button>
+
+                        <Link
+                            href="/account?tab=wishlist"
+                            className="relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                        >
+                            <Heart className="w-5 h-5 md:w-6 md:h-6" />
+                            {wishlistCount > 0 && (
+                                <span className="absolute top-1 right-1 bg-rose-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white shadow-sm">
+                                    {wishlistCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        <Link
+                            href="/cart"
+                            className={`relative p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all ${cartShaking ? 'animate-bounce' : ''}`}
+                        >
+                            <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
+                            <span className="absolute top-1 right-1 bg-rose-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold border-2 border-white shadow-sm">
+                                {cartCount}
+                            </span>
+                        </Link>
+
+                        <Link
+                            href="/account"
+                            className="hidden md:flex p-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                        >
+                            <User className="w-6 h-6" />
+                        </Link>
+                    </div>
                 </div>
             </div>
 

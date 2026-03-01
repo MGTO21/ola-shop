@@ -298,18 +298,75 @@ export default function AccountPage() {
 
     return (
         <div className={`min-h-screen flex flex-col bg-gray-50 pb-20 ${language === 'ar' ? 'font-arabic' : 'font-sans'}`} dir={dir}>
-            <main className="flex-1 container mx-auto px-4 py-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Sidebar */}
-                    <aside className="w-full lg:w-72 space-y-4">
-                        <div className="bg-white p-8 rounded-3xl shadow-sm md:sticky md:top-24 border border-gray-100">
+            <main className="flex-1 container mx-auto px-4 py-6 md:py-10">
+                <div className="flex flex-col lg:flex-row gap-6 md:gap-10">
+
+                    {/* MOBILE PROFILE HEADER (Visible only on mobile) */}
+                    <div className="lg:hidden bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                        <div className="relative w-20 h-20 flex-shrink-0">
+                            <div className="absolute inset-0 bg-rose-500 rounded-full blur-lg opacity-10"></div>
+                            <div className="relative w-full h-full bg-gradient-to-br from-rose-50 to-rose-100 rounded-full flex items-center justify-center text-rose-600 font-extrabold text-2xl uppercase border-2 border-white shadow-inner">
+                                {customer.first_name ? customer.first_name.charAt(0) : <User className="w-8 h-8" />}
+                            </div>
+                            {isVerified && (
+                                <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1 rounded-full border-2 border-white shadow-sm">
+                                    <Truck className="w-3 h-3" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex-1">
+                            <h2 className="font-black text-xl text-gray-900 line-clamp-1">
+                                {customer.first_name} {customer.last_name}
+                            </h2>
+                            <p className="text-gray-500 font-bold text-sm mt-0.5" dir="ltr">{customer.phone}</p>
+                            <div className="mt-2 flex items-center gap-2">
+                                <span className="bg-rose-50 text-rose-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-rose-100">
+                                    {customer?.metadata?.loyalty_tier || "Classic"}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-bold">
+                                    {customer?.metadata?.loyalty_points || 0} {t.account.points_earned}
+                                </span>
+                            </div>
+                        </div>
+                        <button onClick={handleLogout} className="p-3 text-red-500 bg-red-50 rounded-2xl active:scale-90 transition-transform">
+                            <LogOut className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* MOBILE TAB NAVIGATION (Horizontal Scroll) */}
+                    <div className="lg:hidden sticky top-[72px] z-30 -mx-4 px-4 bg-gray-50/80 backdrop-blur-md py-2 border-b border-gray-100 overflow-x-auto scrollbar-hide flex gap-2">
+                        {[
+                            { id: "profile", label: t.account.profile, icon: User },
+                            { id: "loyalty", label: t.account.loyalty, icon: Star },
+                            { id: "coupons", label: t.account.coupons, icon: Ticket },
+                            { id: "orders", label: t.account.orders, icon: Package },
+                            { id: "addresses", label: t.account.addresses, icon: MapPin },
+                            { id: "wishlist", label: t.account.wishlist, icon: Gift },
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold whitespace-nowrap transition-all ${activeTab === tab.id
+                                    ? "bg-rose-600 text-white shadow-md shadow-rose-200"
+                                    : "bg-white text-gray-500 border border-gray-100"
+                                    }`}
+                            >
+                                <tab.icon className="w-4 h-4" />
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Sidebar (Desktop Only) */}
+                    <aside className="hidden lg:block w-72 space-y-4">
+                        <div className="bg-white p-8 rounded-3xl shadow-sm sticky top-28 border border-gray-100">
                             <div className="relative group mx-auto mb-4 w-24 h-24">
                                 <div className="absolute inset-0 bg-rose-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
                                 <div className="relative w-24 h-24 bg-gradient-to-br from-rose-50 to-rose-100 rounded-full flex items-center justify-center text-rose-600 font-black text-3xl uppercase border-2 border-white shadow-inner">
                                     {customer.first_name ? customer.first_name.charAt(0) : <User className="w-10 h-10" />}
                                 </div>
                                 {isVerified && (
-                                    <div className="absolute -bottom-1 -left-1 bg-emerald-500 text-white p-1.5 rounded-full border-2 border-white shadow-lg" title={t.account.profile}>
+                                    <div className="absolute -bottom-1 -left-1 bg-emerald-500 text-white p-1.5 rounded-full border-2 border-white shadow-lg">
                                         <Truck className="w-4 h-4" />
                                     </div>
                                 )}
