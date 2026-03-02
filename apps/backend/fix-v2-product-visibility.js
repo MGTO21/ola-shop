@@ -34,11 +34,12 @@ async function run() {
 
             // Link to Sales Channel - Confirmed table is 'product_sales_channel'
             try {
+                const linkId = `prodsc_${Math.random().toString(36).substr(2, 9)}`;
                 await client.query(`
-                    INSERT INTO product_sales_channel (product_id, sales_channel_id)
-                    VALUES ($1, $2)
+                    INSERT INTO product_sales_channel (id, product_id, sales_channel_id)
+                    VALUES ($1, $2, $3)
                     ON CONFLICT DO NOTHING
-                `, [product.id, scId]);
+                `, [linkId, product.id, scId]);
                 console.log(`  ✅ Linked to Sales Channel (product_sales_channel).`);
             } catch (e) {
                 console.log(`  ❌ Error linking to sales channel: ${e.message}`);
