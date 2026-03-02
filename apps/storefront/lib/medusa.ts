@@ -2,7 +2,7 @@ import Medusa from "@medusajs/medusa-js"
 
 const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
 
-export const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "pk_3b9ce0ab55a6f2cfa25747f441ddfdbdea53c45ab496005d3b8a0ff6a5bd693f"
+export const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "apk_01KC1N6KBJBZ9WV15XWTM77NQ6"
 
 // In the browser, we use the relative proxy to avoid CORS/Cookie/Mixed Content issues
 // On the server, we use the full backend URL for direct communication
