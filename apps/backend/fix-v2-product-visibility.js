@@ -32,27 +32,16 @@ async function run() {
                 console.log(`  ✅ Set status to 'published'.`);
             }
 
-            // Link to Sales Channel
-            // In Medusa v2, the table is usually product_sales_channel
+            // Link to Sales Channel - Confirmed table is 'product_sales_channel'
             try {
                 await client.query(`
                     INSERT INTO product_sales_channel (product_id, sales_channel_id)
                     VALUES ($1, $2)
                     ON CONFLICT DO NOTHING
                 `, [product.id, scId]);
-                console.log(`  ✅ Linked to Sales Channel.`);
+                console.log(`  ✅ Linked to Sales Channel (product_sales_channel).`);
             } catch (e) {
-                // Try alternate table name if first fails
-                try {
-                    await client.query(`
-                        INSERT INTO sales_channel_product (product_id, sales_channel_id)
-                        VALUES ($1, $2)
-                        ON CONFLICT DO NOTHING
-                    `, [product.id, scId]);
-                    console.log(`  ✅ Linked to Sales Channel (alternate table).`);
-                } catch (e2) {
-                    console.log(`  ℹ️ Could not link to sales channel: ${e2.message}`);
-                }
+                console.log(`  ❌ Error linking to sales channel: ${e.message}`);
             }
         }
 
